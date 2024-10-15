@@ -36,12 +36,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.velopath.ui.theme.VelopathTheme
 import kotlinx.coroutines.launch
 
 //Add proper navigation controller!
+//Make all previewable and composable soon
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -123,6 +125,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
+                        Greeting(name = "Android")
                     }
                 }
             }
@@ -133,13 +136,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Hello $name!",
+            textAlign = TextAlign.Center
+        )
+    }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun GreetingPreview() {
     VelopathTheme {
