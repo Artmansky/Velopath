@@ -45,6 +45,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.velopath.ui.theme.VelopathTheme
 import kotlinx.coroutines.launch
 
@@ -53,6 +56,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             VelopathTheme {
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = StartScreen) {
+                    composable<StartScreen>
+                }
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
