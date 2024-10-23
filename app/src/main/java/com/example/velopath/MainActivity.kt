@@ -10,19 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,12 +30,27 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.velopath.destinations.Feedback
+import com.example.velopath.destinations.GlobalData
+import com.example.velopath.destinations.Home
+import com.example.velopath.destinations.Info
+import com.example.velopath.destinations.NavigationItem
+import com.example.velopath.destinations.PrintFeedback
+import com.example.velopath.destinations.PrintHome
+import com.example.velopath.destinations.PrintInfo
+import com.example.velopath.destinations.PrintProfile
+import com.example.velopath.destinations.PrintRoutes
+import com.example.velopath.destinations.PrintSettings
+import com.example.velopath.destinations.Profile
+import com.example.velopath.destinations.Routes
+import com.example.velopath.destinations.Settings
 import com.example.velopath.ui.theme.VelopathTheme
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,42 +71,11 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun MainScreen() {
-    val items = listOf(
-        NavigationItem(
-            title = "Home",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-        ),
-        NavigationItem(
-            title = "Your Profile",
-            selectedIcon = Icons.Filled.Person,
-            unselectedIcon = Icons.Outlined.Person,
-        ),
-        NavigationItem(
-            title = "Your Routes",
-            selectedIcon = Icons.Filled.Place,
-            unselectedIcon = Icons.Outlined.Place,
-        ),
-        NavigationItem(
-            title = "Settings",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-        ),
-        NavigationItem(
-            title = "App info",
-            selectedIcon = Icons.Filled.Info,
-            unselectedIcon = Icons.Outlined.Info,
-        ),
-        NavigationItem(
-            title = "Send Feedback",
-            selectedIcon = Icons.Filled.ThumbUp,
-            unselectedIcon = Icons.Outlined.ThumbUp,
-        ),
-    )
-
+    val items = GlobalData.tabs
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+    val navController = rememberNavController()
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -113,6 +85,7 @@ fun MainScreen() {
                 onItemSelected = { index ->
                     selectedItemIndex = index
                     scope.launch { drawerState.close() }
+                    navController.navigate(items[index].destinationNav)
                 }
             )
         },
@@ -130,7 +103,14 @@ fun MainScreen() {
                 Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
             }
         }
-        Greeting(name = "Android")
+        NavHost(navController = navController, startDestination = Home) {
+            composable<Home> { PrintHome() }
+            composable<Profile> { PrintProfile() }
+            composable<Routes> { PrintRoutes() }
+            composable<Settings> { PrintSettings() }
+            composable<Info> { PrintInfo() }
+            composable<Feedback> { PrintFeedback() }
+        }
     }
 }
 
@@ -158,16 +138,3 @@ fun DrawerContent(
         }
     }
 }
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(
-            text = "Hello $name!",
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Serializable
-object Home
