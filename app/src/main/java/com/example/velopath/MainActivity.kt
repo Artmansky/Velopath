@@ -102,12 +102,12 @@ fun MainNavigator() {
                         },
                         modifier = Modifier
                             .padding(16.dp)
-                            .size(48.dp)
+                            .size(56.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Menu",
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(32.dp)
                         )
                     }
                 }
