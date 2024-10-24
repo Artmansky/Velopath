@@ -49,7 +49,7 @@ object GlobalData {
             destinationNav = Settings
         ),
         NavigationItem(
-            title = "App info",
+            title = "About",
             selectedIcon = Icons.Filled.Info,
             unselectedIcon = Icons.Outlined.Info,
             destinationNav = Info
