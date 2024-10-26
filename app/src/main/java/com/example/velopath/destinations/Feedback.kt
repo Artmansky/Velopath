@@ -52,6 +52,12 @@ fun FeedbackPage() {
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
+        Text(
+            text = "Give us information about possible updates or bugs You found",
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
