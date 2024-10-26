@@ -74,7 +74,12 @@ fun FeedbackPage() {
 
         Button(
             onClick = {
+
+                //Send feedback to database here, Firebase still not configured
+
                 Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
+                name = ""
+                message = ""
             },
             modifier = Modifier.padding(top = 8.dp)
         ) {
