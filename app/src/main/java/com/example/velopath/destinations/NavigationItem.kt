@@ -43,16 +43,16 @@ object GlobalData {
             destinationNav = Routes
         ),
         NavigationItem(
-            title = "Settings",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-            destinationNav = Settings
-        ),
-        NavigationItem(
             title = "About",
             selectedIcon = Icons.Filled.Info,
             unselectedIcon = Icons.Outlined.Info,
             destinationNav = Info
+        ),
+        NavigationItem(
+            title = "Settings",
+            selectedIcon = Icons.Filled.Settings,
+            unselectedIcon = Icons.Outlined.Settings,
+            destinationNav = Settings
         ),
         NavigationItem(
             title = "Send Feedback",

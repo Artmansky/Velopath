@@ -122,8 +122,8 @@ fun MainNavigator() {
                 composable<Home> { PrintHome() }
                 composable<Profile> { PrintProfile() }
                 composable<Routes> { PrintRoutes() }
-                composable<Settings> { PrintSettings() }
                 composable<Info> { PrintInfo() }
+                composable<Settings> { PrintSettings() }
                 composable<Feedback> { PrintFeedback() }
             }
         }
@@ -152,8 +152,18 @@ fun DrawerContent(
     onItemSelected: (Int) -> Unit
 ) {
     ModalDrawerSheet(modifier = Modifier.width(250.dp)) {
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(
+            text = "Hello, User!",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(start = 16.dp, bottom = 16.dp)
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        items.forEachIndexed { index, item ->
+        
+        items.dropLast(2).forEachIndexed { index, item ->
             NavigationDrawerItem(
                 label = { Text(text = item.title) },
                 selected = index == selectedItemIndex,
@@ -161,6 +171,23 @@ fun DrawerContent(
                 icon = {
                     Icon(
                         imageVector = if (index == selectedItemIndex) item.selectedIcon else item.unselectedIcon,
+                        contentDescription = item.title
+                    )
+                },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        items.takeLast(2).forEachIndexed { index, item ->
+            NavigationDrawerItem(
+                label = { Text(text = item.title) },
+                selected = index + items.size - 2 == selectedItemIndex,
+                onClick = { onItemSelected(index + items.size - 2) },
+                icon = {
+                    Icon(
+                        imageVector = if (index + items.size - 2 == selectedItemIndex) item.selectedIcon else item.unselectedIcon,
                         contentDescription = item.title
                     )
                 },
