@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Velopath</string>
-    <string name="default_web_client_id">983161696808-ddkgqmjaicfeuhj3s71plsl1684uasdt.apps.googleusercontent.com</string>
-    <string name="feedback_info">Give us information about possible updates or bugs You found</string>
-    <string name="app_info_message">Hi, (Thomas) author here. This app is my engineering project for Silesian University of Technology. Project aims to deliver tool with multiple roads to cycle around. Built using Jetpack Compose and with support for Material Design 3.</string>
-</resources>
