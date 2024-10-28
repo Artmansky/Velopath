@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.velopath.R
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -53,7 +54,7 @@ fun FeedbackPage() {
         )
 
         Text(
-            text = "Give us information about possible updates or bugs You found",
+            text = context.getString(R.string.feedback_info),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(bottom = 24.dp)
         )

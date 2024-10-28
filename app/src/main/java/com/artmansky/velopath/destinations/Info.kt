@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.velopath.R
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -48,7 +49,7 @@ fun InformationPage() {
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Velopath",
+            text = context.getString(R.string.app_name),
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 24.sp),
             modifier = Modifier.padding(bottom = 8.dp)
         )
@@ -60,7 +61,7 @@ fun InformationPage() {
         )
 
         Text(
-            text = "Hi, (Thomas) author here. This app is my engineering project for Silesian University of Technology. Project aims to deliver tool with multiple roads to cycle around. Built using Jetpack Compose and with support for Material Design 3.",
+            text = context.getString(R.string.app_info_message),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(bottom = 24.dp)
         )
