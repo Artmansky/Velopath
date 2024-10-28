@@ -1,4 +1,4 @@
-package com.example.velopath
+package com.artmansky.velopath
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -36,21 +36,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.velopath.destinations.Feedback
-import com.example.velopath.destinations.GlobalData
-import com.example.velopath.destinations.Home
-import com.example.velopath.destinations.Info
-import com.example.velopath.destinations.NavigationItem
-import com.example.velopath.destinations.PrintFeedback
-import com.example.velopath.destinations.PrintHome
-import com.example.velopath.destinations.PrintInfo
-import com.example.velopath.destinations.PrintProfile
-import com.example.velopath.destinations.PrintRoutes
-import com.example.velopath.destinations.PrintSettings
-import com.example.velopath.destinations.Profile
-import com.example.velopath.destinations.Routes
-import com.example.velopath.destinations.Settings
-import com.example.velopath.ui.theme.VelopathTheme
+import com.artmansky.velopath.destinations.Feedback
+import com.artmansky.velopath.destinations.GlobalData
+import com.artmansky.velopath.destinations.Home
+import com.artmansky.velopath.destinations.Info
+import com.artmansky.velopath.destinations.NavigationItem
+import com.artmansky.velopath.destinations.PrintFeedback
+import com.artmansky.velopath.destinations.PrintHome
+import com.artmansky.velopath.destinations.PrintInfo
+import com.artmansky.velopath.destinations.PrintProfile
+import com.artmansky.velopath.destinations.PrintRoutes
+import com.artmansky.velopath.destinations.PrintSettings
+import com.artmansky.velopath.destinations.Profile
+import com.artmansky.velopath.destinations.Routes
+import com.artmansky.velopath.destinations.Settings
+import com.artmansky.velopath.ui.theme.VelopathTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -162,7 +162,7 @@ fun DrawerContent(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         items.dropLast(2).forEachIndexed { index, item ->
             NavigationDrawerItem(
                 label = { Text(text = item.title) },

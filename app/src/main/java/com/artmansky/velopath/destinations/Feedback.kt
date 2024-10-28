@@ -1,4 +1,4 @@
-package com.example.velopath.destinations
+package com.artmansky.velopath.destinations
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

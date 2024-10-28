@@ -1,4 +1,4 @@
-package com.example.velopath.ui.theme
+package com.artmansky.velopath.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

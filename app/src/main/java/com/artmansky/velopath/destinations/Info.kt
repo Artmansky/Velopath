@@ -1,4 +1,4 @@
-package com.example.velopath.destinations
+package com.artmansky.velopath.destinations
 
 import android.content.Context
 import android.content.Intent

@@ -1,4 +1,4 @@
-package com.example.velopath.destinations
+package com.artmansky.velopath.destinations
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,14 +11,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.serialization.Serializable
 
 @Serializable
-object Home
+object Routes
 
 @Preview
 @Composable
-fun PrintHome(modifier: Modifier = Modifier) {
+fun PrintRoutes(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = "Hello Home",
+            text = "Hello Routes",
             textAlign = TextAlign.Center
         )
     }
