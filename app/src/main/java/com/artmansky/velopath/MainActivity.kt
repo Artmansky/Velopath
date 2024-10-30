@@ -28,6 +28,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -50,6 +51,7 @@ import com.artmansky.velopath.destinations.PrintSettings
 import com.artmansky.velopath.destinations.Profile
 import com.artmansky.velopath.destinations.Routes
 import com.artmansky.velopath.destinations.Settings
+import com.artmansky.velopath.login.LoginScreen
 import com.artmansky.velopath.ui.theme.VelopathTheme
 import kotlinx.coroutines.launch
 
@@ -58,11 +60,23 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             VelopathTheme {
+
+
+                val isLogged = remember { mutableStateOf(false) }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainNavigator()
+                    if (isLogged.value) {
+                        MainNavigator()
+                    } else {
+                        LoginScreen(
+                            onLoginSuccess = {
+                                isLogged.value = true
+                            }
+                        )
+                    }
                 }
             }
         }

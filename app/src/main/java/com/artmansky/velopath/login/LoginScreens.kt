@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun LoginScreen(modifier: Modifier) {
+fun LoginScreen(onLoginSuccess: () -> Unit) {
     var email by remember {
         mutableStateOf("")
     }
@@ -114,7 +114,7 @@ fun LoginScreen(modifier: Modifier) {
                 authenticationManager.loginWithEmail(email, password)
                     .onEach { response ->
                         if (response is AuthResponse.Success) {
-
+                            onLoginSuccess()
                         }
                     }
                     .launchIn(coroutineScope)
@@ -143,7 +143,7 @@ fun LoginScreen(modifier: Modifier) {
                 authenticationManager.signInWithGoogle()
                     .onEach { response ->
                         if (response is AuthResponse.Success) {
-
+                            onLoginSuccess()
                         }
                     }
                     .launchIn(coroutineScope)

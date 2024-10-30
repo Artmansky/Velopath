@@ -4,6 +4,7 @@ plugins {
 
     //Additional plugins
     id("kotlinx-serialization")
+    id("com.google.gms.google-services")
 }
 
 android {
