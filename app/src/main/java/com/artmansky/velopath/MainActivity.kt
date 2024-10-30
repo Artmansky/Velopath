@@ -139,7 +139,7 @@ fun TopBar(title: String, onDrawerClick: () -> Unit) {
         },
         navigationIcon = {
             IconButton(onClick = onDrawerClick) {
-                Icon(imageVector = Icons.Default.Menu, contentDescription = "Open Drawer")
+                Icon(imageVector = Icons.Default.Menu, contentDescription = null)
             }
         }
     )
