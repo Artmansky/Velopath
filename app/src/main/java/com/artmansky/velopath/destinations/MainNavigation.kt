@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.artmansky.velopath.login.UserData
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -39,7 +40,7 @@ import kotlinx.serialization.Serializable
 object MainNavigation
 
 @Composable
-fun MainNavigator() {
+fun MainNavigator(userData: UserData?) {
     val items = GlobalData.tabs
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -57,7 +58,8 @@ fun MainNavigator() {
                     navController.navigate(items[index].destinationNav) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                     }
-                }
+                },
+                userData
             )
         },
         drawerState = drawerState
@@ -118,13 +120,18 @@ fun TopBar(title: String, onDrawerClick: () -> Unit) {
 fun DrawerContent(
     items: List<NavigationItem>,
     selectedItemIndex: Int,
-    onItemSelected: (Int) -> Unit
+    onItemSelected: (Int) -> Unit,
+    userData: UserData?
 ) {
     ModalDrawerSheet(modifier = Modifier.width(250.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
 
+        var username = "User"
+        if (userData?.username != null) {
+            username = userData.username
+        }
         Text(
-            text = "Hello, User!",
+            text = "Hello, $username!",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .padding(start = 16.dp, bottom = 16.dp)

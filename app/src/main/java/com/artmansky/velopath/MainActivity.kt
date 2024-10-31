@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<MainNavigation> {
-                            MainNavigator()
+                            MainNavigator(userData = googleAuthUiClient.getSignedInUser())
                         }
                     }
                 }
