@@ -144,6 +144,11 @@ class MainActivity : ComponentActivity() {
                                                             googleIdToken,
                                                             null
                                                         )
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Logging You in, please wait",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                     auth.signInWithCredential(firebaseCredential)
                                                         .addOnCompleteListener { task ->
                                                             if (task.isSuccessful) {
