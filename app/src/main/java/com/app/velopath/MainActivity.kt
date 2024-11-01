@@ -147,7 +147,6 @@ class MainActivity : ComponentActivity() {
                                                     auth.signInWithCredential(firebaseCredential)
                                                         .addOnCompleteListener { task ->
                                                             if (task.isSuccessful) {
-                                                                navController.popBackStack()
                                                                 navController.navigate(Home)
                                                             }
                                                         }
