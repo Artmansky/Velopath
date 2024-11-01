@@ -7,15 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.serialization.Serializable
 
 @Serializable
 object Home
 
-@Preview
 @Composable
-fun PrintHome(modifier: Modifier = Modifier) {
+fun PrintHome(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) {
+    navButton()
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
             text = "Hello Home",

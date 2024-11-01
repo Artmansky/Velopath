@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,9 +29,17 @@ import kotlinx.serialization.Serializable
 object Feedback
 
 @Composable
-fun PrintFeedback(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize()) {
-        FeedbackPage()
+fun PrintFeedback(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) {
+    Scaffold(
+        topBar = { navButton() }
+    ) { contentPadding ->
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+        ) {
+            FeedbackPage()
+        }
     }
 }
 

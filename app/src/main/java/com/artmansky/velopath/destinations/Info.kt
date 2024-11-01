@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.velopath.R
@@ -24,11 +24,18 @@ import kotlinx.serialization.Serializable
 @Serializable
 object Info
 
-@Preview
 @Composable
-fun PrintInfo(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize()) {
-        InformationPage()
+fun PrintInfo(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) {
+    Scaffold(
+        topBar = { navButton() }
+    ) { contentPadding ->
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+        ) {
+            InformationPage()
+        }
     }
 }
 

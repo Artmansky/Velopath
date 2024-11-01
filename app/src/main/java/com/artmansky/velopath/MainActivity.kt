@@ -75,8 +75,8 @@ class MainActivity : ComponentActivity() {
                     val items = GlobalData.tabs
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
-                    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
                     val navController = rememberNavController()
+                    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
 
                     ModalNavigationDrawer(
                         drawerContent = {
@@ -95,33 +95,10 @@ class MainActivity : ComponentActivity() {
                                 userData = googleAuthUiClient.getSignedInUser()
                             )
                         },
-                        drawerState = drawerState
+                        drawerState = drawerState,
+                        gesturesEnabled = false
                     ) {
                         Column(modifier = Modifier.fillMaxSize()) {
-                            when (selectedItemIndex) {
-                                0 -> {
-                                    IconButton(
-                                        onClick = {
-                                            scope.launch { drawerState.open() }
-                                        },
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .size(56.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Menu,
-                                            contentDescription = "Menu",
-                                            modifier = Modifier.size(32.dp)
-                                        )
-                                    }
-                                }
-
-                                else -> {
-                                    TopBar(title = items[selectedItemIndex].title, onDrawerClick = {
-                                        scope.launch { drawerState.open() }
-                                    })
-                                }
-                            }
                             NavHost(
                                 navController = navController,
                                 startDestination = SignInScreen
@@ -178,12 +155,71 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
-                                composable<Home> { PrintHome() }
-                                composable<Profile> { PrintProfile() }
-                                composable<Routes> { PrintRoutes() }
-                                composable<Info> { PrintInfo() }
-                                composable<Settings> { PrintSettings() }
-                                composable<Feedback> { PrintFeedback() }
+                                composable<Home> {
+                                    PrintHome(navButton = {
+                                        IconButton(
+                                            onClick = {
+                                                scope.launch { drawerState.open() }
+                                            },
+                                            modifier = Modifier
+                                                .padding(16.dp)
+                                                .size(56.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Menu,
+                                                contentDescription = "Menu",
+                                                modifier = Modifier.size(32.dp)
+                                            )
+                                        }
+                                    })
+                                }
+                                composable<Profile> {
+                                    PrintProfile(
+                                        navButton = {
+                                            TopBar(
+                                                title = items[selectedItemIndex].title,
+                                                onDrawerClick = {
+                                                    scope.launch { drawerState.open() }
+                                                })
+                                        }
+                                    )
+                                }
+                                composable<Routes> {
+                                    PrintRoutes(navButton = {
+                                        TopBar(
+                                            title = items[selectedItemIndex].title,
+                                            onDrawerClick = {
+                                                scope.launch { drawerState.open() }
+                                            })
+                                    })
+                                }
+                                composable<Info> {
+                                    PrintInfo(navButton = {
+                                        TopBar(
+                                            title = items[selectedItemIndex].title,
+                                            onDrawerClick = {
+                                                scope.launch { drawerState.open() }
+                                            })
+                                    })
+                                }
+                                composable<Settings> {
+                                    PrintSettings(navButton = {
+                                        TopBar(
+                                            title = items[selectedItemIndex].title,
+                                            onDrawerClick = {
+                                                scope.launch { drawerState.open() }
+                                            })
+                                    })
+                                }
+                                composable<Feedback> {
+                                    PrintFeedback(navButton = {
+                                        TopBar(
+                                            title = items[selectedItemIndex].title,
+                                            onDrawerClick = {
+                                                scope.launch { drawerState.open() }
+                                            })
+                                    })
+                                }
                             }
                         }
                     }
