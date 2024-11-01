@@ -1,4 +1,4 @@
-package com.artmansky.velopath.destinations
+package com.app.velopath.destinations
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

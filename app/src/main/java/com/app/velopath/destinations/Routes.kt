@@ -1,4 +1,4 @@
-package com.artmansky.velopath.destinations
+package com.app.velopath.destinations
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

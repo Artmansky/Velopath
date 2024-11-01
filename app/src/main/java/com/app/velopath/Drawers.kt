@@ -1,4 +1,4 @@
-package com.artmansky.velopath
+package com.app.velopath
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -18,8 +18,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.artmansky.velopath.destinations.NavigationItem
-import com.artmansky.velopath.login.UserData
+import com.app.velopath.destinations.NavigationItem
+import com.google.firebase.auth.FirebaseUser
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,21 +42,19 @@ fun DrawerContent(
     items: List<NavigationItem>,
     selectedItemIndex: Int,
     onItemSelected: (Int) -> Unit,
-    userData: UserData?
+    userData: FirebaseUser?
 ) {
     ModalDrawerSheet(modifier = Modifier.width(250.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
-
-        var username = "User"
-        if (userData?.username != null) {
-            username = userData.username
+        
+        userData?.displayName?.let { name ->
+            Text(
+                text = "Hello, $name!",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(start = 16.dp, bottom = 16.dp)
+            )
         }
-        Text(
-            text = "Hello, $username!",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .padding(start = 16.dp, bottom = 16.dp)
-        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

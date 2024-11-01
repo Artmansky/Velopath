@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.velopath"
+    namespace = "com.app.velopath"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.velopath"
+        applicationId = "com.app.velopath"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

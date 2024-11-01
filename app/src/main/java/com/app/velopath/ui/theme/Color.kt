@@ -1,4 +1,4 @@
-package com.artmansky.velopath.ui.theme
+package com.app.velopath.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

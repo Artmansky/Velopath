@@ -1,4 +1,4 @@
-package com.artmansky.velopath.destinations
+package com.app.velopath.destinations
 
 import android.content.Context
 import android.content.Intent
@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.velopath.R
+import com.app.velopath.R
 import kotlinx.serialization.Serializable
 
 @Serializable
