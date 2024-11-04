@@ -154,6 +154,7 @@ class MainActivity : ComponentActivity() {
                                                     auth.signInWithCredential(firebaseCredential)
                                                         .addOnCompleteListener { task ->
                                                             if (task.isSuccessful) {
+                                                                selectedItemIndex = 0
                                                                 navController.navigate(Home)
                                                             }
                                                         }
@@ -202,7 +203,6 @@ class MainActivity : ComponentActivity() {
                                                 credentialManager.clearCredentialState(
                                                     ClearCredentialStateRequest()
                                                 )
-                                                selectedItemIndex = 0
                                             }
                                             navController.popBackStack()
                                             navController.navigate(SignInScreen)
