@@ -55,12 +55,12 @@ android {
 }
 
 dependencies {
-    implementation("com.google.maps.android:maps-compose:2.11.1")
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.maps)
+    implementation(libs.androidx.credentials)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.play.services.auth)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

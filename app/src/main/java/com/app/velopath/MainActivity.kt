@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -26,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.navigation.compose.NavHost
@@ -81,6 +81,7 @@ class MainActivity : ComponentActivity() {
                     val credentialManager = CredentialManager.create(context)
                     val startDestination = if (auth.currentUser == null) SignInScreen else Home
                     var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+                    val gestures = rememberSaveable { mutableStateOf(false) }
 
                     auth.addAuthStateListener { firebaseAuth ->
                         _currentUser.value = firebaseAuth.currentUser
@@ -105,7 +106,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         drawerState = drawerState,
-                        gesturesEnabled = false
+                        gesturesEnabled = gestures.value
                     ) {
                         Column(modifier = Modifier.fillMaxSize()) {
                             NavHost(
@@ -153,6 +154,7 @@ class MainActivity : ComponentActivity() {
                                                         .addOnCompleteListener { task ->
                                                             if (task.isSuccessful) {
                                                                 navController.navigate(Home)
+                                                                gestures.value = true
                                                             }
                                                         }
                                                 } catch (e: Exception) {
@@ -167,13 +169,13 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                                 composable<Home> {
+                                    gestures.value = true
                                     PrintHome(navButton = {
                                         IconButton(
                                             onClick = {
                                                 scope.launch { drawerState.open() }
                                             },
                                             modifier = Modifier
-                                                .padding(16.dp)
                                                 .size(56.dp)
                                         ) {
                                             Icon(
@@ -192,6 +194,16 @@ class MainActivity : ComponentActivity() {
                                                 onDrawerClick = {
                                                     scope.launch { drawerState.open() }
                                                 })
+                                        },
+                                        onSignOutClick = {
+                                            auth.signOut()
+                                            scope.launch {
+                                                credentialManager.clearCredentialState(
+                                                    ClearCredentialStateRequest()
+                                                )
+                                            }
+                                            navController.navigate(SignInScreen)
+                                            gestures.value = false
                                         }
                                     )
                                 }
