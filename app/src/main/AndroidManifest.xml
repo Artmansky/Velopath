@@ -19,7 +19,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAKXZmFZHru6ebwSLTL8lHlaqW_6G_K-ro" />
+            android:value="${GMP_Key}" />
 
         <activity
             android:name="com.app.velopath.MainActivity"

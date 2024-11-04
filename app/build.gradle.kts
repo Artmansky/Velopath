@@ -5,6 +5,7 @@ plugins {
     //Additional plugins
     id("kotlinx-serialization")
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -16,7 +17,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "0.0.1"
+        versionName = "0.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -55,6 +56,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.secrets.gradle.plugin)
     implementation(libs.maps.compose)
     implementation(libs.play.services.maps)
     implementation(libs.androidx.credentials)
@@ -71,6 +73,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.googleid)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

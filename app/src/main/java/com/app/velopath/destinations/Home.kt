@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
+import com.app.velopath.mapsHandling.moveToUserLocation
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -30,19 +31,16 @@ object Home
 @Composable
 fun PrintHome(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) {
     val context = LocalContext.current
-
-    // Define initial position for the map (e.g., San Francisco)
     val initialPosition = LatLng(37.7749, -122.4194)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(initialPosition, 10f)
     }
-
-    // Request location permission
+    
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { granted ->
-            if (!granted) {
-                // Handle permission denial (optional)
+            if (granted) {
+                moveToUserLocation(cameraPositionState, context)
             }
         }
     )
@@ -54,15 +52,13 @@ fun PrintHome(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) 
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            moveToUserLocation(cameraPositionState, context)
         }
     }
 
-    // Main UI structure
     Column(modifier = modifier.fillMaxSize()) {
-        // Navigation button at the top
         navButton()
-
-        // Map occupies 3/4 of the available space
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -74,8 +70,6 @@ fun PrintHome(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) 
                 uiSettings = MapUiSettings(zoomControlsEnabled = true)
             )
         }
-
-        // Remaining space for other content
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -114,6 +114,7 @@ class MainActivity : ComponentActivity() {
                                 startDestination = startDestination
                             ) {
                                 composable<SignInScreen> {
+                                    gestures.value = false
                                     PrintSignInScreen(
                                         onSignInClick = {
                                             val googleIdOption = GetGoogleIdOption.Builder()
@@ -154,7 +155,6 @@ class MainActivity : ComponentActivity() {
                                                         .addOnCompleteListener { task ->
                                                             if (task.isSuccessful) {
                                                                 navController.navigate(Home)
-                                                                gestures.value = true
                                                             }
                                                         }
                                                 } catch (e: Exception) {
@@ -169,7 +169,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                                 composable<Home> {
-                                    gestures.value = true
+                                    gestures.value = false
                                     PrintHome(navButton = {
                                         IconButton(
                                             onClick = {
@@ -187,6 +187,7 @@ class MainActivity : ComponentActivity() {
                                     })
                                 }
                                 composable<Profile> {
+                                    gestures.value = true
                                     PrintProfile(
                                         navButton = {
                                             TopBar(
@@ -201,13 +202,15 @@ class MainActivity : ComponentActivity() {
                                                 credentialManager.clearCredentialState(
                                                     ClearCredentialStateRequest()
                                                 )
+                                                selectedItemIndex = 0
                                             }
+                                            navController.popBackStack()
                                             navController.navigate(SignInScreen)
-                                            gestures.value = false
                                         }
                                     )
                                 }
                                 composable<Routes> {
+                                    gestures.value = true
                                     PrintRoutes(navButton = {
                                         TopBar(
                                             title = items[selectedItemIndex].title,
@@ -217,6 +220,7 @@ class MainActivity : ComponentActivity() {
                                     })
                                 }
                                 composable<Info> {
+                                    gestures.value = true
                                     PrintInfo(navButton = {
                                         TopBar(
                                             title = items[selectedItemIndex].title,
@@ -226,6 +230,7 @@ class MainActivity : ComponentActivity() {
                                     })
                                 }
                                 composable<Settings> {
+                                    gestures.value = true
                                     PrintSettings(navButton = {
                                         TopBar(
                                             title = items[selectedItemIndex].title,
@@ -235,6 +240,7 @@ class MainActivity : ComponentActivity() {
                                     })
                                 }
                                 composable<Feedback> {
+                                    gestures.value = true
                                     PrintFeedback(navButton = {
                                         TopBar(
                                             title = items[selectedItemIndex].title,
