@@ -35,7 +35,7 @@ fun PrintHome(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(initialPosition, 10f)
     }
-    
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { granted ->
@@ -58,7 +58,6 @@ fun PrintHome(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) 
     }
 
     Column(modifier = modifier.fillMaxSize()) {
-        navButton()
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -69,6 +68,12 @@ fun PrintHome(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) 
                 cameraPositionState = cameraPositionState,
                 uiSettings = MapUiSettings(zoomControlsEnabled = true)
             )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+            ) {
+                navButton()
+            }
         }
         Box(
             modifier = Modifier

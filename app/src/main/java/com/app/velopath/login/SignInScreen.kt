@@ -2,14 +2,18 @@ package com.app.velopath.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,19 +66,39 @@ fun PrintSignInScreen(
             )
 
             Text(
-                text = "Please sign in using",
+                text = "Please continue with",
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            Button(
-                onClick = onSignInClick,
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(
-                    text = "Google",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+            GoogleSignInButton(onSignInClick)
         }
+    }
+}
+
+
+@Composable
+fun GoogleSignInButton(onSignInClick: () -> Unit) {
+    val isDarkTheme = isSystemInDarkTheme()
+    
+    val backgroundColor = if (isDarkTheme) Color.White else Color.Black
+    val contentColor = if (isDarkTheme) Color.Black else Color.White
+
+    Button(
+        onClick = onSignInClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+        shape = RoundedCornerShape(32.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = backgroundColor,
+            contentColor = contentColor
+        )
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.google_logo_svg),
+            contentDescription = "Google Logo",
+            modifier = Modifier.padding(end = 8.dp)
+        )
+        Text(text = "Sign in with Google", modifier = Modifier.padding(6.dp))
     }
 }

@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Surface
@@ -22,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -171,18 +174,23 @@ class MainActivity : ComponentActivity() {
                                 composable<Home> {
                                     gestures.value = false
                                     PrintHome(navButton = {
-                                        IconButton(
-                                            onClick = {
-                                                scope.launch { drawerState.open() }
-                                            },
+                                        Box(
                                             modifier = Modifier
-                                                .size(56.dp)
+                                                .fillMaxSize()
+                                                .padding(16.dp),
+                                            contentAlignment = Alignment.TopStart
                                         ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Menu,
-                                                contentDescription = "Menu",
-                                                modifier = Modifier.size(32.dp)
-                                            )
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    scope.launch { drawerState.open() }
+                                                }
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Menu,
+                                                    contentDescription = "Menu",
+                                                    modifier = Modifier.size(32.dp)
+                                                )
+                                            }
                                         }
                                     })
                                 }
