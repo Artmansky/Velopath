@@ -79,7 +79,6 @@ class MainActivity : ComponentActivity() {
                     val scope = rememberCoroutineScope()
                     val navController = rememberNavController()
                     val credentialManager = CredentialManager.create(context)
-                    val startDestination = if (auth.currentUser == null) SignInScreen else Home
                     var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
                     val gestures = rememberSaveable { mutableStateOf(false) }
 
@@ -111,7 +110,7 @@ class MainActivity : ComponentActivity() {
                         Column(modifier = Modifier.fillMaxSize()) {
                             NavHost(
                                 navController = navController,
-                                startDestination = startDestination
+                                startDestination = if (auth.currentUser == null) SignInScreen else Home
                             ) {
                                 composable<SignInScreen> {
                                     gestures.value = false
@@ -155,7 +154,7 @@ class MainActivity : ComponentActivity() {
                                                         .addOnCompleteListener { task ->
                                                             if (task.isSuccessful) {
                                                                 selectedItemIndex = 0
-                                                                navController.navigate(Home)
+                                                                navController.navigate(Profile)
                                                             }
                                                         }
                                                 } catch (e: Exception) {
