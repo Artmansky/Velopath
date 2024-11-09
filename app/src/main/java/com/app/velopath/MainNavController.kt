@@ -229,13 +229,16 @@ fun MainNavigation(
                 }
                 composable<Feedback> {
                     gestures.value = true
-                    PrintFeedback(navButton = {
-                        TopBar(
-                            title = items[selectedItemIndex].title,
-                            onDrawerClick = {
-                                scope.launch { drawerState.open() }
-                            })
-                    })
+                    PrintFeedback(
+                        navButton = {
+                            TopBar(
+                                title = items[selectedItemIndex].title,
+                                onDrawerClick = {
+                                    scope.launch { drawerState.open() }
+                                })
+                        },
+                        onClick = database::addFeedbackMessage
+                    )
                 }
             }
         }

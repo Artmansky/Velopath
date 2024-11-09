@@ -36,6 +36,9 @@ class FirebaseManagement(private var user: FirebaseUser?) {
 
             db.collection("Feedback")
                 .add(message)
+                .addOnSuccessListener {
+                    onResult(null)
+                }
                 .addOnFailureListener { e ->
                     onResult(e.message)
                 }

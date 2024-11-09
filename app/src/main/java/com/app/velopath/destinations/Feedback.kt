@@ -32,7 +32,7 @@ object Feedback
 fun PrintFeedback(
     modifier: Modifier = Modifier,
     navButton: @Composable () -> Unit,
-    addFunction: () -> Unit
+    onClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit
 ) {
     Scaffold(
         topBar = { navButton() }
@@ -42,13 +42,15 @@ fun PrintFeedback(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            FeedbackPage()
+            FeedbackPage(onClick)
         }
     }
 }
 
 @Composable
-fun FeedbackPage() {
+fun FeedbackPage(
+    onClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit
+) {
     var name by rememberSaveable { mutableStateOf("") }
     var message by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
@@ -94,10 +96,10 @@ fun FeedbackPage() {
 
         Button(
             onClick = {
+                onClick("Great app!", "John Doe") {
+                    Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
+                }
 
-                //Send feedback to database here, Firebase still not configured
-
-                Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
                 name = ""
                 message = ""
             },
