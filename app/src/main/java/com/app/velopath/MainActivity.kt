@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private val _currentUser = MutableStateFlow<FirebaseUser?>(null)
     private val currentUser: StateFlow<FirebaseUser?> = _currentUser
+    private val database = FirebaseManagement(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +37,10 @@ class MainActivity : ComponentActivity() {
                         _currentUser.value = firebaseAuth.currentUser
                     }
                     val user by currentUser.collectAsState()
+                    database.updateCurrentUser(user)
                     val clientID = getString(R.string.default_web_client_id)
 
-                    MainNavigation(user, auth, clientID)
+                    MainNavigation(user, auth, clientID, database)
                 }
             }
         }

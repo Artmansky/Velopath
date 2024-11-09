@@ -29,7 +29,11 @@ import kotlinx.serialization.Serializable
 object Feedback
 
 @Composable
-fun PrintFeedback(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) {
+fun PrintFeedback(
+    modifier: Modifier = Modifier,
+    navButton: @Composable () -> Unit,
+    addFunction: () -> Unit
+) {
     Scaffold(
         topBar = { navButton() }
     ) { contentPadding ->

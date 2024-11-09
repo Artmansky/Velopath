@@ -53,7 +53,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainNavigation(user: FirebaseUser?, auth: FirebaseAuth, clientID: String) {
+fun MainNavigation(
+    user: FirebaseUser?,
+    auth: FirebaseAuth,
+    clientID: String,
+    database: FirebaseManagement
+) {
     val context = LocalContext.current
     val items = GlobalData.tabs
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
