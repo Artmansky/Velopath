@@ -96,7 +96,7 @@ fun FeedbackPage(
 
         Button(
             onClick = {
-                onClick("Great app!", "John Doe") {
+                onClick(message, name) {
                     Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
                 }
 
