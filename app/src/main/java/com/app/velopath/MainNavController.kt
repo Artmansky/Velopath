@@ -219,13 +219,16 @@ fun MainNavigation(
                 }
                 composable<Settings> {
                     gestures.value = true
-                    PrintSettings(navButton = {
-                        TopBar(
-                            title = items[selectedItemIndex].title,
-                            onDrawerClick = {
-                                scope.launch { drawerState.open() }
-                            })
-                    })
+                    PrintSettings(
+                        navButton = {
+                            TopBar(
+                                title = items[selectedItemIndex].title,
+                                onDrawerClick = {
+                                    scope.launch { drawerState.open() }
+                                })
+                        },
+                        context = context
+                    )
                 }
                 composable<Feedback> {
                     gestures.value = true

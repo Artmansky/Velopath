@@ -14,6 +14,13 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 
+fun isLocationPermissionGranted(context: Context): Boolean {
+    return ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
+}
+
 @Composable
 fun GrantPermissionAndMove(cameraPositionState: CameraPositionState, context: Context) {
     val launcher = rememberLauncherForActivityResult(
@@ -26,14 +33,10 @@ fun GrantPermissionAndMove(cameraPositionState: CameraPositionState, context: Co
     )
 
     LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        } else {
+        if (isLocationPermissionGranted(context)) {
             moveToUserLocation(cameraPositionState, context)
+        } else {
+            launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 }
