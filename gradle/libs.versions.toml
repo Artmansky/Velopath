@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.1"
+coreSplashscreen = "1.0.0"
 credentials = "1.3.0"
 datastorePreferencesVersion = "1.0.0"
 firebaseAuthKtx = "23.1.0"
@@ -24,6 +25,7 @@ firebaseFirestoreKtx = "25.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
