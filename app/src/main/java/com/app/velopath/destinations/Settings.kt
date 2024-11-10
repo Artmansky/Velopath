@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -39,7 +40,8 @@ object Settings
 fun PrintSettings(
     modifier: Modifier = Modifier,
     navButton: @Composable () -> Unit,
-    context: Context
+    context: Context,
+    toggleFunction: @Composable () -> Unit,
 ) {
     var isPermissionGranted by remember { mutableStateOf(isLocationPermissionGranted(context)) }
 
@@ -97,6 +99,21 @@ fun PrintSettings(
                     ) {
                         Text(text = if (isPermissionGranted) "Granted" else "Grant")
                     }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Switch to dark theme",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    toggleFunction()
                 }
             }
         }

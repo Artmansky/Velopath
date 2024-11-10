@@ -41,7 +41,7 @@ fun PrintHome(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) 
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
-                uiSettings = MapUiSettings(zoomControlsEnabled = true)
+                uiSettings = MapUiSettings(zoomControlsEnabled = false),
             )
             Box(
                 modifier = Modifier

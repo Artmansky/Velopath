@@ -12,6 +12,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Switch
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -57,7 +58,9 @@ fun MainNavigation(
     user: FirebaseUser?,
     auth: FirebaseAuth,
     clientID: String,
-    database: FirebaseManagement
+    database: FirebaseManagement,
+    darkTheme: Boolean,
+    onDarkThemeChange: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
     val items = GlobalData.tabs
@@ -76,7 +79,6 @@ fun MainNavigation(
                 items = items,
                 selectedItemIndex = selectedItemIndex,
                 onItemSelected = { index ->
-                    selectedItemIndex = index
                     scope.launch { drawerState.close() }
                     navController.navigate(items[index].destinationNav) {
                         popUpTo(navController.graph.startDestinationId) {
@@ -152,6 +154,7 @@ fun MainNavigation(
                     )
                 }
                 composable<Home> {
+                    selectedItemIndex = 0
                     gestures.value = false
                     PrintHome(navButton = {
                         Box(
@@ -175,6 +178,7 @@ fun MainNavigation(
                     })
                 }
                 composable<Profile> {
+                    selectedItemIndex = 1
                     gestures.value = true
                     PrintProfile(
                         navButton = {
@@ -198,6 +202,7 @@ fun MainNavigation(
                     )
                 }
                 composable<Routes> {
+                    selectedItemIndex = 2
                     gestures.value = true
                     PrintRoutes(navButton = {
                         TopBar(
@@ -208,6 +213,7 @@ fun MainNavigation(
                     })
                 }
                 composable<Info> {
+                    selectedItemIndex = 3
                     gestures.value = true
                     PrintInfo(navButton = {
                         TopBar(
@@ -218,6 +224,7 @@ fun MainNavigation(
                     })
                 }
                 composable<Settings> {
+                    selectedItemIndex = 4
                     gestures.value = true
                     PrintSettings(
                         navButton = {
@@ -227,10 +234,19 @@ fun MainNavigation(
                                     scope.launch { drawerState.open() }
                                 })
                         },
-                        context = context
+                        context = context,
+                        toggleFunction = {
+                            Switch(
+                                checked = darkTheme,
+                                onCheckedChange = {
+                                    onDarkThemeChange(!darkTheme)
+                                }
+                            )
+                        },
                     )
                 }
                 composable<Feedback> {
+                    selectedItemIndex = 5
                     gestures.value = true
                     PrintFeedback(
                         navButton = {
