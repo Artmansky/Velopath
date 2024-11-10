@@ -2,7 +2,6 @@ package com.app.velopath.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,8 @@ object SignInScreen
 
 @Composable
 fun PrintSignInScreen(
-    onSignInClick: () -> Unit
+    onSignInClick: () -> Unit,
+    darkTheme: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -70,16 +70,15 @@ fun PrintSignInScreen(
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            GoogleSignInButton(onSignInClick)
+            GoogleSignInButton(onSignInClick, darkTheme)
         }
     }
 }
 
 
 @Composable
-fun GoogleSignInButton(onSignInClick: () -> Unit) {
-    val isDarkTheme = isSystemInDarkTheme()
-    
+fun GoogleSignInButton(onSignInClick: () -> Unit, isDarkTheme: Boolean) {
+
     val backgroundColor = if (isDarkTheme) Color.White else Color.Black
     val contentColor = if (isDarkTheme) Color.Black else Color.White
 

@@ -150,7 +150,8 @@ fun MainNavigation(
                                     ).show()
                                 }
                             }
-                        }
+                        },
+                        darkTheme = darkTheme
                     )
                 }
                 composable<Home> {
