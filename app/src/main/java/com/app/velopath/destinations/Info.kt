@@ -19,15 +19,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.velopath.R
+import com.app.velopath.TopBar
 import kotlinx.serialization.Serializable
 
 @Serializable
 object Info
 
 @Composable
-fun PrintInfo(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) {
+fun PrintInfo(
+    modifier: Modifier = Modifier,
+    title: String,
+    onClick: () -> Unit
+) {
     Scaffold(
-        topBar = { navButton() }
+        topBar = {
+            TopBar(
+                title = title,
+                onDrawerClick = onClick
+            )
+        }
     ) { contentPadding ->
         Box(
             modifier = modifier

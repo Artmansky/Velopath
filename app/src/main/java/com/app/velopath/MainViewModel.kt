@@ -1,16 +1,9 @@
 package com.app.velopath
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Switch
 import androidx.compose.material3.rememberDrawerState
@@ -21,10 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -68,9 +59,6 @@ class MainViewModel(private val preferencesManager: PreferencesManager) : ViewMo
     private val _darkTheme = MutableStateFlow(false)
     val darkTheme: StateFlow<Boolean> = _darkTheme
 
-    private val _isReady = MutableStateFlow(false)
-    val isReady = _isReady.asStateFlow()
-
     init {
         viewModelScope.launch {
             auth.addAuthStateListener { firebaseAuth ->
@@ -80,8 +68,6 @@ class MainViewModel(private val preferencesManager: PreferencesManager) : ViewMo
             preferencesManager.darkThemeFlow.collect { isDark ->
                 _darkTheme.value = isDark
             }
-
-            _isReady.value = true
         }
     }
 
@@ -197,37 +183,17 @@ fun MainNavigation(
                 composable<Home> {
                     selectedItemIndex = 0
                     gestures.value = false
-                    PrintHome(navButton = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.TopStart
-                        ) {
-                            FloatingActionButton(
-                                onClick = {
-                                    scope.launch { drawerState.open() }
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Menu,
-                                    contentDescription = "Menu",
-                                    modifier = Modifier.size(32.dp)
-                                )
-                            }
-                        }
+                    PrintHome(onClick = {
+                        scope.launch { drawerState.open() }
                     })
                 }
                 composable<Profile> {
                     selectedItemIndex = 1
                     gestures.value = true
                     PrintProfile(
-                        navButton = {
-                            TopBar(
-                                title = items[selectedItemIndex].title,
-                                onDrawerClick = {
-                                    scope.launch { drawerState.open() }
-                                })
+                        title = items[selectedItemIndex].title,
+                        onClick = {
+                            scope.launch { drawerState.open() }
                         },
                         onSignOutClick = {
                             auth.signOut()
@@ -245,35 +211,28 @@ fun MainNavigation(
                 composable<Routes> {
                     selectedItemIndex = 2
                     gestures.value = true
-                    PrintRoutes(navButton = {
-                        TopBar(
-                            title = items[selectedItemIndex].title,
-                            onDrawerClick = {
-                                scope.launch { drawerState.open() }
-                            })
-                    })
+                    PrintRoutes(title = items[selectedItemIndex].title,
+                        onClick = {
+                            scope.launch { drawerState.open() }
+                        }
+                    )
                 }
                 composable<Info> {
                     selectedItemIndex = 3
                     gestures.value = true
-                    PrintInfo(navButton = {
-                        TopBar(
-                            title = items[selectedItemIndex].title,
-                            onDrawerClick = {
-                                scope.launch { drawerState.open() }
-                            })
-                    })
+                    PrintInfo(title = items[selectedItemIndex].title,
+                        onClick = {
+                            scope.launch { drawerState.open() }
+                        }
+                    )
                 }
                 composable<Settings> {
                     selectedItemIndex = 4
                     gestures.value = true
                     PrintSettings(
-                        navButton = {
-                            TopBar(
-                                title = items[selectedItemIndex].title,
-                                onDrawerClick = {
-                                    scope.launch { drawerState.open() }
-                                })
+                        title = items[selectedItemIndex].title,
+                        onClick = {
+                            scope.launch { drawerState.open() }
                         },
                         context = context,
                         toggleFunction = {
@@ -290,14 +249,11 @@ fun MainNavigation(
                     selectedItemIndex = 5
                     gestures.value = true
                     PrintFeedback(
-                        navButton = {
-                            TopBar(
-                                title = items[selectedItemIndex].title,
-                                onDrawerClick = {
-                                    scope.launch { drawerState.open() }
-                                })
+                        title = items[selectedItemIndex].title,
+                        onClick = {
+                            scope.launch { drawerState.open() }
                         },
-                        onClick = database::addFeedbackMessage
+                        onFeedbackClick = database::addFeedbackMessage
                     )
                 }
             }

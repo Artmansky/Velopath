@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.app.velopath.TopBar
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.serialization.Serializable
 
@@ -19,12 +20,18 @@ object Profile
 @Composable
 fun PrintProfile(
     modifier: Modifier = Modifier,
-    navButton: @Composable () -> Unit,
+    title: String,
+    onClick: () -> Unit,
     onSignOutClick: () -> Unit,
     userData: FirebaseUser?
 ) {
     Scaffold(
-        topBar = { navButton() }
+        topBar = {
+            TopBar(
+                title = title,
+                onDrawerClick = onClick
+            )
+        }
     ) { contentPadding ->
         Box(
             modifier = modifier

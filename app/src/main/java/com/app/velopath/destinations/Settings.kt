@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.velopath.TopBar
 import com.app.velopath.mapsHandling.isLocationPermissionGranted
 import kotlinx.serialization.Serializable
 
@@ -39,7 +40,8 @@ object Settings
 @Composable
 fun PrintSettings(
     modifier: Modifier = Modifier,
-    navButton: @Composable () -> Unit,
+    title: String,
+    onClick: () -> Unit,
     context: Context,
     toggleFunction: @Composable () -> Unit,
 ) {
@@ -57,7 +59,12 @@ fun PrintSettings(
     }
 
     Scaffold(
-        topBar = { navButton() }
+        topBar = {
+            TopBar(
+                title = title,
+                onDrawerClick = onClick
+            )
+        }
     ) { contentPadding ->
         Box(
             modifier = modifier

@@ -9,15 +9,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import com.app.velopath.TopBar
 import kotlinx.serialization.Serializable
 
 @Serializable
 object Routes
 
 @Composable
-fun PrintRoutes(modifier: Modifier = Modifier, navButton: @Composable () -> Unit) {
+fun PrintRoutes(
+    modifier: Modifier = Modifier,
+    title: String,
+    onClick: () -> Unit
+) {
     Scaffold(
-        topBar = { navButton() }
+        topBar = {
+            TopBar(
+                title = title,
+                onDrawerClick = onClick
+            )
+        }
     ) { contentPadding ->
         Box(
             modifier = modifier

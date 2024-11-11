@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.app.velopath.R
+import com.app.velopath.TopBar
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,18 +32,24 @@ object Feedback
 @Composable
 fun PrintFeedback(
     modifier: Modifier = Modifier,
-    navButton: @Composable () -> Unit,
-    onClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit
+    title: String,
+    onClick: () -> Unit,
+    onFeedbackClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit
 ) {
     Scaffold(
-        topBar = { navButton() }
+        topBar = {
+            TopBar(
+                title = title,
+                onDrawerClick = onClick
+            )
+        }
     ) { contentPadding ->
         Box(
             modifier = modifier
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            FeedbackPage(onClick)
+            FeedbackPage(onFeedbackClick)
         }
     }
 }
