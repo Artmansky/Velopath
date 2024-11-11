@@ -21,6 +21,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -39,6 +40,8 @@ import com.app.velopath.destinations.Routes
 import com.app.velopath.destinations.Settings
 import com.app.velopath.login.PrintSignInScreen
 import com.app.velopath.login.SignInScreen
+import com.app.velopath.ui.DrawerContent
+import com.app.velopath.ui.PreferencesManager
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
@@ -46,6 +49,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -76,13 +80,28 @@ class MainViewModel(private val preferencesManager: PreferencesManager) : ViewMo
             preferencesManager.saveDarkThemePreference(isDark)
         }
     }
+
+    fun logoutUser(
+        scope: CoroutineScope,
+        credentialManager: CredentialManager,
+        navController: NavController
+    ) {
+        auth.signOut()
+        scope.launch {
+            credentialManager.clearCredentialState(
+                ClearCredentialStateRequest()
+            )
+        }
+        navController.popBackStack()
+        navController.navigate(SignInScreen)
+    }
 }
 
 
 @Composable
 fun MainNavigation(
     user: FirebaseUser?,
-    auth: FirebaseAuth,
+    viewModel: MainViewModel,
     clientID: String,
     database: FirebaseManagement,
     darkTheme: Boolean,
@@ -121,7 +140,7 @@ fun MainNavigation(
         Column(modifier = Modifier.fillMaxSize()) {
             NavHost(
                 navController = navController,
-                startDestination = if (auth.currentUser == null) SignInScreen else Home
+                startDestination = if (viewModel.auth.currentUser == null) SignInScreen else Home
             ) {
                 composable<SignInScreen> {
                     gestures.value = false
@@ -161,7 +180,7 @@ fun MainNavigation(
                                         "Logging You in, please wait",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    auth.signInWithCredential(firebaseCredential)
+                                    viewModel.auth.signInWithCredential(firebaseCredential)
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful) {
                                                 selectedItemIndex = 0
@@ -196,14 +215,7 @@ fun MainNavigation(
                             scope.launch { drawerState.open() }
                         },
                         onSignOutClick = {
-                            auth.signOut()
-                            scope.launch {
-                                credentialManager.clearCredentialState(
-                                    ClearCredentialStateRequest()
-                                )
-                            }
-                            navController.popBackStack()
-                            navController.navigate(SignInScreen)
+                            viewModel.logoutUser(scope, credentialManager, navController)
                         },
                         userData = user
                     )

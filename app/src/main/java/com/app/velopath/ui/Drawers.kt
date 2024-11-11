@@ -1,4 +1,4 @@
-package com.app.velopath
+package com.app.velopath.ui
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -46,7 +46,7 @@ fun DrawerContent(
 ) {
     ModalDrawerSheet(modifier = Modifier.width(250.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         userData?.displayName?.let { name ->
             Text(
                 text = "Hello, $name!",

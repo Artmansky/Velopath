@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.app.velopath.ui.PreferencesManager
 import com.app.velopath.ui.theme.VelopathTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     database.updateCurrentUser(user)
                     val clientID = getString(R.string.default_web_client_id)
 
-                    MainNavigation(user, viewModel.auth, clientID, database, darkTheme) { isDark ->
+                    MainNavigation(user, viewModel, clientID, database, darkTheme) { isDark ->
                         viewModel.saveTheme(isDark)
                     }
                 }

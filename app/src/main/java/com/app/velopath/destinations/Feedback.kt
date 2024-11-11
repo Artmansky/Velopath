@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.app.velopath.R
-import com.app.velopath.TopBar
+import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
 
 @Serializable

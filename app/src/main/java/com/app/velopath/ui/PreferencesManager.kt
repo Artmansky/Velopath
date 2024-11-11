@@ -1,4 +1,4 @@
-package com.app.velopath
+package com.app.velopath.ui
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -19,7 +19,7 @@ class PreferencesManager(context: Context) {
             preferences[DARK_THEME_KEY] = isDark
         }
     }
-    
+
     val darkThemeFlow: Flow<Boolean> = dataStore.data
         .map { preferences ->
             preferences[DARK_THEME_KEY] ?: false
