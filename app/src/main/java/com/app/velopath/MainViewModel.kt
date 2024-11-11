@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val preferencesManager: PreferencesManager) : ViewModel() {
     val auth: FirebaseAuth = Firebase.auth
-    private val _currentUser = MutableStateFlow<FirebaseUser?>(auth.currentUser)
+    private val _currentUser = MutableStateFlow(auth.currentUser)
     val currentUser: StateFlow<FirebaseUser?> = _currentUser.asStateFlow()
 
     private val _darkTheme = MutableStateFlow(false)
