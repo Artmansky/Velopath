@@ -3,7 +3,6 @@ package com.app.velopath.destinations
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ fun PrintProfile(
     modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit,
-    onSignOutClick: () -> Unit,
     userData: FirebaseUser?
 ) {
     Scaffold(
@@ -39,14 +37,10 @@ fun PrintProfile(
                 .padding(contentPadding),
             contentAlignment = Alignment.Center
         ) {
-            Button(
-                onClick = { onSignOutClick() }
-            ) {
-                Text(
-                    text = "Sign Out",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+            Text(
+                text = "Hello Profile",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }

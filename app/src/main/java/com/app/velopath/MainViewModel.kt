@@ -214,9 +214,6 @@ fun MainNavigation(
                         onClick = {
                             scope.launch { drawerState.open() }
                         },
-                        onSignOutClick = {
-                            viewModel.logoutUser(scope, credentialManager, navController)
-                        },
                         userData = user
                     )
                 }
@@ -255,6 +252,9 @@ fun MainNavigation(
                                 }
                             )
                         },
+                        onSignOut = {
+                            viewModel.logoutUser(scope, credentialManager, navController)
+                        }
                     )
                 }
                 composable<Feedback> {
