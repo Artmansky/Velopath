@@ -29,6 +29,7 @@ import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -81,8 +82,7 @@ class MainViewModel(private val preferencesManager: PreferencesManager) : ViewMo
             preferencesManager.darkThemeFlow.collect { isDark ->
                 _darkTheme.value = isDark
             }
-
-            delay(3000L)
+            
             _isReady.value = true
         }
     }
