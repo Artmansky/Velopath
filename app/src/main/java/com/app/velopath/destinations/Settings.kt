@@ -141,9 +141,6 @@ fun PrintSettings(
                     )
                     Button(
                         onClick = onSignOut,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(text = "Sign Out")
