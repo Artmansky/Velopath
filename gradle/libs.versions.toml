@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.1"
+android = "11.8.0"
 coreSplashscreen = "1.0.0"
 credentials = "1.3.0"
 datastorePreferencesVersion = "1.0.0"
@@ -14,6 +15,7 @@ kotlinxSerializationJson = "1.5.1"
 lifecycleRuntimeKtx = "2.8.3"
 activityCompose = "1.9.0"
 composeBom = "2024.04.01"
+mapboxMapsCompose = "11.8.0"
 mapsCompose = "2.11.1"
 navigationCompose = "2.8.3"
 googleid = "1.1.1"
@@ -24,6 +26,7 @@ playServicesLocation = "21.3.0"
 firebaseFirestoreKtx = "25.1.1"
 
 [libraries]
+android = { module = "com.mapbox.maps:android", version.ref = "android" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
@@ -47,6 +50,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+mapbox-maps-compose = { module = "com.mapbox.extension:maps-compose", version.ref = "mapboxMapsCompose" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }

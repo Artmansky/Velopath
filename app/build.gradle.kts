@@ -56,6 +56,8 @@ android {
 }
 
 dependencies {
+    implementation("com.mapbox.maps:android:11.8.0")
+    implementation(libs.mapbox.maps.compose)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.secrets.gradle.plugin)
