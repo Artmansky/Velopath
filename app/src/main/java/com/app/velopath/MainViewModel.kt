@@ -131,7 +131,7 @@ fun MainNavigation(
                         }
                     }
                 },
-                userData = user
+                userName = user?.displayName ?: "Nickname"
             )
         },
         drawerState = drawerState,

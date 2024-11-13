@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.velopath.destinations.NavigationItem
-import com.google.firebase.auth.FirebaseUser
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,19 +41,17 @@ fun DrawerContent(
     items: List<NavigationItem>,
     selectedItemIndex: Int,
     onItemSelected: (Int) -> Unit,
-    userData: FirebaseUser?
+    userName: String
 ) {
     ModalDrawerSheet(modifier = Modifier.width(250.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
 
-        userData?.displayName?.let { name ->
-            Text(
-                text = "Hello, $name!",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .padding(start = 16.dp, bottom = 16.dp)
-            )
-        }
+        Text(
+            text = "Hello, $userName!",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(start = 16.dp, bottom = 16.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
