@@ -21,9 +21,10 @@ import androidx.compose.ui.unit.dp
 import com.app.velopath.mapsHandling.GrantPermissionAndMove
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.mapbox.geojson.Point
+import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -45,10 +46,16 @@ fun PrintHome(modifier: Modifier = Modifier, onClick: () -> Unit) {
                 .fillMaxWidth()
                 .weight(0.75f)
         ) {
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-                uiSettings = MapUiSettings(zoomControlsEnabled = false),
+            MapboxMap(
+                Modifier.fillMaxSize(),
+                mapViewportState = rememberMapViewportState {
+                    setCameraOptions {
+                        zoom(2.0)
+                        center(Point.fromLngLat(-98.0, 39.5))
+                        pitch(0.0)
+                        bearing(0.0)
+                    }
+                },
             )
             Box(
                 modifier = Modifier
