@@ -45,7 +45,7 @@ fun PrintProfile(
         topBar = {
             TopBar(
                 title = title,
-                onDrawerClick = onClick
+                onDrawerClick = onClick,
             )
         }
     ) { contentPadding ->
@@ -148,7 +148,7 @@ fun PrintProfile(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
