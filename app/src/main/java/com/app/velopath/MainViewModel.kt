@@ -202,9 +202,11 @@ fun MainNavigation(
                 composable<Home> {
                     selectedItemIndex = 0
                     gestures.value = false
-                    PrintHome(onClick = {
-                        scope.launch { drawerState.open() }
-                    })
+                    PrintHome(
+                        darkMode = darkTheme,
+                        onClick = {
+                            scope.launch { drawerState.open() }
+                        })
                 }
                 composable<Profile> {
                     selectedItemIndex = 1

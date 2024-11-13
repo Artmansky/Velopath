@@ -23,15 +23,17 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.mapbox.geojson.Point
+import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.style.MapStyle
 import kotlinx.serialization.Serializable
 
 @Serializable
 object Home
 
 @Composable
-fun PrintHome(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun PrintHome(modifier: Modifier = Modifier, darkMode: Boolean, onClick: () -> Unit) {
     val context = LocalContext.current
     val initialPosition = LatLng(37.7749, -122.4194)
     val cameraPositionState = rememberCameraPositionState {
@@ -56,6 +58,13 @@ fun PrintHome(modifier: Modifier = Modifier, onClick: () -> Unit) {
                         bearing(0.0)
                     }
                 },
+                style = {
+                    if (darkMode) {
+                        MapStyle(style = Style.DARK)
+                    } else {
+                        MapStyle(style = Style.LIGHT)
+                    }
+                }
             )
             Box(
                 modifier = Modifier
