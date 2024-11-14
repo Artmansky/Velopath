@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
         viewModel = MainViewModel(preferencesManager)
 
         setContent {
+            //Dark mode needs some fixing soon
             val darkTheme by viewModel.darkTheme.collectAsState()
             VelopathTheme(darkTheme = darkTheme) {
                 Surface(

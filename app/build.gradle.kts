@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.app.velopath"
-        minSdk = 26
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "0.0.7"
