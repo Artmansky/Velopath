@@ -317,8 +317,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_travel_explore_24" />
-                            <entry key="sourceFile" value="C:\Users\Tomek\Documents\Alelluja\Magnum Opus\Velopath" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="velopath_icon" />
+                            <entry key="sourceFile" value="C:\Users\Tomek\Downloads\Velopath_Icon.svg" />
                           </map>
                         </option>
                       </PersistentState>
