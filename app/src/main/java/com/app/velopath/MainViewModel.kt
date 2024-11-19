@@ -1,6 +1,7 @@
 package com.app.velopath
 
 import android.widget.Toast
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
@@ -42,6 +43,7 @@ import com.app.velopath.login.PrintSignInScreen
 import com.app.velopath.login.SignInScreen
 import com.app.velopath.ui.DrawerContent
 import com.app.velopath.ui.PreferencesManager
+import com.app.velopath.ui.theme.ThemeMode
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
@@ -60,24 +62,23 @@ class MainViewModel(private val preferencesManager: PreferencesManager) : ViewMo
     private val _currentUser = MutableStateFlow(auth.currentUser)
     val currentUser: StateFlow<FirebaseUser?> = _currentUser.asStateFlow()
 
-    private val _darkTheme = MutableStateFlow(false)
-    val darkTheme: StateFlow<Boolean> = _darkTheme
+    private val _darkTheme = MutableStateFlow(ThemeMode.SYSTEM_DEFAULT)
+    val darkTheme: StateFlow<ThemeMode> = _darkTheme.asStateFlow()
 
     init {
         viewModelScope.launch {
             auth.addAuthStateListener { firebaseAuth ->
                 _currentUser.value = firebaseAuth.currentUser
             }
-
-            preferencesManager.darkThemeFlow.collect { isDark ->
-                _darkTheme.value = isDark
+            preferencesManager.themeMode.collect { themeMode ->
+                _darkTheme.value = themeMode
             }
         }
     }
 
-    fun saveTheme(isDark: Boolean) {
+    fun saveTheme(themeMode: ThemeMode) {
         viewModelScope.launch {
-            preferencesManager.saveDarkThemePreference(isDark)
+            preferencesManager.saveThemePreference(themeMode)
         }
     }
 
@@ -104,7 +105,7 @@ fun MainNavigation(
     viewModel: MainViewModel,
     clientID: String,
     database: FirebaseManagement,
-    darkTheme: Boolean,
+    themeMode: ThemeMode,
     onDarkThemeChange: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
@@ -116,7 +117,11 @@ fun MainNavigation(
     val gestures = rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    //Maybe move some funtions to separate blocks of code??
+    val isDarkTheme = when (themeMode) {
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+        ThemeMode.SYSTEM_DEFAULT -> isSystemInDarkTheme()
+    }
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -184,7 +189,7 @@ fun MainNavigation(
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful) {
                                                 selectedItemIndex = 0
-                                                navController.navigate(Profile)
+                                                navController.navigate(Home)
                                             }
                                         }
                                 } catch (e: Exception) {
@@ -196,14 +201,14 @@ fun MainNavigation(
                                 }
                             }
                         },
-                        darkTheme = darkTheme
+                        darkTheme = isDarkTheme
                     )
                 }
                 composable<Home> {
                     selectedItemIndex = 0
                     gestures.value = false
                     PrintHome(
-                        darkMode = darkTheme,
+                        darkMode = isDarkTheme,
                         onClick = {
                             scope.launch { drawerState.open() }
                         })
@@ -248,9 +253,9 @@ fun MainNavigation(
                         context = context,
                         toggleFunction = {
                             Switch(
-                                checked = darkTheme,
-                                onCheckedChange = {
-                                    onDarkThemeChange(!darkTheme)
+                                checked = isDarkTheme,
+                                onCheckedChange = { isDark ->
+                                    onDarkThemeChange(isDark)
                                 }
                             )
                         },
