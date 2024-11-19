@@ -24,7 +24,10 @@ import com.app.velopath.destinations.NavigationItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String, onDrawerClick: () -> Unit) {
+fun TopBar(
+    title: String,
+    onDrawerClick: () -> Unit
+) {
     TopAppBar(
         title = {
             Text(text = title)

@@ -33,7 +33,11 @@ import kotlinx.serialization.Serializable
 object Home
 
 @Composable
-fun PrintHome(modifier: Modifier = Modifier, darkMode: Boolean, onClick: () -> Unit) {
+fun PrintHome(
+    modifier: Modifier = Modifier,
+    darkMode: Boolean,
+    onClick: () -> Unit
+) {
     val context = LocalContext.current
     val initialPosition = LatLng(37.7749, -122.4194)
     val cameraPositionState = rememberCameraPositionState {
