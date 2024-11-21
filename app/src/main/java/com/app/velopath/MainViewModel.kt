@@ -41,6 +41,7 @@ import com.app.velopath.destinations.Routes
 import com.app.velopath.destinations.Settings
 import com.app.velopath.login.PrintSignInScreen
 import com.app.velopath.login.SignInScreen
+import com.app.velopath.mapsHandling.MapsHandling
 import com.app.velopath.ui.DrawerContent
 import com.app.velopath.ui.PreferencesManager
 import com.app.velopath.ui.theme.ThemeMode
@@ -116,6 +117,8 @@ fun MainNavigation(
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
     val gestures = rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    val mapsHandler = MapsHandling(context)
 
     val isDarkTheme = when (themeMode) {
         ThemeMode.LIGHT -> false
@@ -208,6 +211,7 @@ fun MainNavigation(
                     selectedItemIndex = 0
                     gestures.value = false
                     PrintHome(
+                        mapsHandler = mapsHandler,
                         darkMode = isDarkTheme,
                         onClick = {
                             scope.launch { drawerState.open() }

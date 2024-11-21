@@ -15,18 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.app.velopath.mapsHandling.GrantPermissionAndMove
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.rememberCameraPositionState
-import com.mapbox.geojson.Point
-import com.mapbox.maps.Style
-import com.mapbox.maps.extension.compose.MapboxMap
-import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
-import com.mapbox.maps.extension.compose.style.MapStyle
+import com.app.velopath.mapsHandling.MapsHandling
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -35,41 +26,17 @@ object Home
 @Composable
 fun PrintHome(
     modifier: Modifier = Modifier,
+    mapsHandler: MapsHandling,
     darkMode: Boolean,
     onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    val initialPosition = LatLng(37.7749, -122.4194)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(initialPosition, 10f)
-    }
-
-    GrantPermissionAndMove(cameraPositionState = cameraPositionState, context = context)
-
     Column(modifier = modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.75f)
         ) {
-            MapboxMap(
-                Modifier.fillMaxSize(),
-                mapViewportState = rememberMapViewportState {
-                    setCameraOptions {
-                        zoom(2.0)
-                        center(Point.fromLngLat(-98.0, 39.5))
-                        pitch(0.0)
-                        bearing(0.0)
-                    }
-                },
-                style = {
-                    if (darkMode) {
-                        MapStyle(style = Style.DARK)
-                    } else {
-                        MapStyle(style = Style.LIGHT)
-                    }
-                }
-            )
+            mapsHandler.PrintMap(darkMode = darkMode)
             Box(
                 modifier = Modifier
                     .align(Alignment.TopStart)
