@@ -34,7 +34,7 @@ fun isLocationPermissionGranted(context: Context): Boolean {
 }
 
 class MapsHandling(private val context: Context) {
-    private val userLocation: Point? = null
+    private var userLocation = Point.fromLngLat(-73.977001, 40.728847)
 
     @Composable
     fun PrintMap(darkMode: Boolean) {
@@ -57,15 +57,21 @@ class MapsHandling(private val context: Context) {
     @Composable
     private fun ShowMap(darkMode: Boolean, hasPermission: Boolean) {
 
-        val point: Pair<Double, Double> = when {
-            hasPermission -> getCurrentLocation(context) ?: Pair(40.728847, -73.977001)
-            userLocation != null -> Pair(userLocation.latitude(), userLocation.longitude())
-            else -> Pair(40.728847, -73.977001)
+        val currentLocation: Pair<Double, Double> = when {
+            hasPermission -> getCurrentLocation(context) ?: Pair(
+                userLocation.longitude(),
+                userLocation.latitude()
+            )
+
+            else -> Pair(userLocation.longitude(), userLocation.latitude())
         }
+        
+        if (hasPermission) userLocation =
+            Point.fromLngLat(currentLocation.first, currentLocation.second)
 
         val mapViewportState = rememberMapViewportState {
             setCameraOptions {
-                center(Point.fromLngLat(point.first, point.second))
+                center(Point.fromLngLat(currentLocation.first, currentLocation.second))
                 zoom(15.0)
                 pitch(0.0)
             }
@@ -86,7 +92,7 @@ class MapsHandling(private val context: Context) {
                 mapView.location.updateSettings {
                     locationPuck = createDefault2DPuck(withBearing = true)
 
-                    enabled = true
+                    enabled = hasPermission
 
                     puckBearing = PuckBearing.COURSE
 
@@ -110,7 +116,7 @@ class MapsHandling(private val context: Context) {
         val location: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
         return if (location != null) {
-            Pair(location.latitude, location.longitude)
+            Pair(location.longitude, location.latitude)
         } else {
             return null
         }
