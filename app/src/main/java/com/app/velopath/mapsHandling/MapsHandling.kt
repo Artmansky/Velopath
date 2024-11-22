@@ -34,7 +34,7 @@ fun isLocationPermissionGranted(context: Context): Boolean {
 }
 
 class MapsHandling(private val context: Context) {
-    private var userLocation = Point.fromLngLat(-73.977001, 40.728847)
+    private val userLocation = mutableStateOf<Point?>(null)
 
     @Composable
     fun PrintMap(darkMode: Boolean) {
@@ -51,27 +51,20 @@ class MapsHandling(private val context: Context) {
             }
         }
 
-        ShowMap(darkMode, hasPermission)
+        if (hasPermission) {
+            ShowMapWithLocation(darkMode)
+        } else {
+            ShowGlobalMap(darkMode)
+        }
     }
 
     @Composable
-    private fun ShowMap(darkMode: Boolean, hasPermission: Boolean) {
-
-        val currentLocation: Pair<Double, Double> = when {
-            hasPermission -> getCurrentLocation(context) ?: Pair(
-                userLocation.longitude(),
-                userLocation.latitude()
-            )
-
-            else -> Pair(userLocation.longitude(), userLocation.latitude())
-        }
-        
-        if (hasPermission) userLocation =
-            Point.fromLngLat(currentLocation.first, currentLocation.second)
+    private fun ShowMapWithLocation(darkMode: Boolean) {
+        val point = getCurrentLocation(context) ?: Pair<Double, Double>(-73.977001, 40.728847)
 
         val mapViewportState = rememberMapViewportState {
             setCameraOptions {
-                center(Point.fromLngLat(currentLocation.first, currentLocation.second))
+                center(Point.fromLngLat(point!!.second, point.first))
                 zoom(15.0)
                 pitch(0.0)
             }
@@ -92,14 +85,45 @@ class MapsHandling(private val context: Context) {
                 mapView.location.updateSettings {
                     locationPuck = createDefault2DPuck(withBearing = true)
 
-                    enabled = hasPermission
+                    enabled = true
 
                     puckBearing = PuckBearing.COURSE
 
                     puckBearingEnabled = true
                 }
+
             }
         }
+    }
+
+    @Composable
+    private fun ShowGlobalMap(darkMode: Boolean) {
+        val point: Point
+        if (userLocation != null) {
+            point = Point.fromLngLat(-73.977001, 40.728847)
+        } else {
+            point = userLocation
+        }
+
+        val mapViewportState = rememberMapViewportState {
+            setCameraOptions {
+                center(point)
+                zoom(1.0)
+                pitch(0.0)
+            }
+        }
+
+        MapboxMap(
+            modifier = Modifier.fillMaxSize(),
+            mapViewportState = mapViewportState,
+            style = {
+                if (darkMode) {
+                    MapStyle(style = Style.DARK)
+                } else {
+                    MapStyle(style = Style.LIGHT)
+                }
+            }
+        )
     }
 
     private fun getCurrentLocation(context: Context): Pair<Double, Double>? {
@@ -116,9 +140,9 @@ class MapsHandling(private val context: Context) {
         val location: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
         return if (location != null) {
-            Pair(location.longitude, location.latitude)
+            Pair(location.latitude, location.longitude)
         } else {
-            return null
+            null
         }
     }
 }
