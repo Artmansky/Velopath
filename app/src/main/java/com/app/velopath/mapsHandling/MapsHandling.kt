@@ -34,7 +34,7 @@ fun isLocationPermissionGranted(context: Context): Boolean {
 }
 
 class MapsHandling(private val context: Context) {
-    private val userLocation = mutableStateOf<Point?>(null)
+    private val userLocation: Point? = null
 
     @Composable
     fun PrintMap(darkMode: Boolean) {
@@ -51,20 +51,21 @@ class MapsHandling(private val context: Context) {
             }
         }
 
-        if (hasPermission) {
-            ShowMapWithLocation(darkMode)
-        } else {
-            ShowGlobalMap(darkMode)
-        }
+        ShowMap(darkMode, hasPermission)
     }
 
     @Composable
-    private fun ShowMapWithLocation(darkMode: Boolean) {
-        val point = getCurrentLocation(context)
+    private fun ShowMap(darkMode: Boolean, hasPermission: Boolean) {
+
+        val point: Pair<Double, Double> = when {
+            hasPermission -> getCurrentLocation(context) ?: Pair(40.728847, -73.977001)
+            userLocation != null -> Pair(userLocation.latitude(), userLocation.longitude())
+            else -> Pair(40.728847, -73.977001)
+        }
 
         val mapViewportState = rememberMapViewportState {
             setCameraOptions {
-                center(Point.fromLngLat(point!!.second, point.first))
+                center(Point.fromLngLat(point.first, point.second))
                 zoom(15.0)
                 pitch(0.0)
             }
@@ -91,39 +92,8 @@ class MapsHandling(private val context: Context) {
 
                     puckBearingEnabled = true
                 }
-
             }
         }
-    }
-
-    @Composable
-    private fun ShowGlobalMap(darkMode: Boolean) {
-        val point: Point
-        if (userLocation != null) {
-            point = Point.fromLngLat(-73.977001, 40.728847)
-        } else {
-            point = userLocation
-        }
-
-        val mapViewportState = rememberMapViewportState {
-            setCameraOptions {
-                center(point)
-                zoom(1.0)
-                pitch(0.0)
-            }
-        }
-
-        MapboxMap(
-            modifier = Modifier.fillMaxSize(),
-            mapViewportState = mapViewportState,
-            style = {
-                if (darkMode) {
-                    MapStyle(style = Style.DARK)
-                } else {
-                    MapStyle(style = Style.LIGHT)
-                }
-            }
-        )
     }
 
     private fun getCurrentLocation(context: Context): Pair<Double, Double>? {
@@ -142,7 +112,7 @@ class MapsHandling(private val context: Context) {
         return if (location != null) {
             Pair(location.latitude, location.longitude)
         } else {
-            null
+            return null
         }
     }
 }
