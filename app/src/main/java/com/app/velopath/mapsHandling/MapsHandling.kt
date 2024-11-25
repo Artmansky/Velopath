@@ -8,6 +8,11 @@ import android.location.LocationManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.mapbox.geojson.Point
 import com.mapbox.maps.Style
@@ -91,8 +97,17 @@ class MapsHandling(private val context: Context) {
 
                     puckBearingEnabled = hasPermission
                 }
-                
             }
+        }
+
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(16.dp),
+            onClick = {
+                mapViewportState.transitionToFollowPuckState()
+            }
+        ) {
+            Icon(Icons.Default.PlayArrow, contentDescription = "Move to Current Location")
         }
     }
 
