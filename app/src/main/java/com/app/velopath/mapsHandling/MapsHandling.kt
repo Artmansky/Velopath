@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -83,7 +84,6 @@ class MapsHandling(private val context: Context) {
             if (hasPermission) getCurrentLocation(context) else null
         } ?: defaultLocation
 
-        //Poprawic wyswietlanie poczatkowej pozycji na mapie
         mapViewportState.setCameraOptions {
             center(Point.fromLngLat(userLocation.second, userLocation.first))
             zoom(15.0)
@@ -118,7 +118,6 @@ class MapsHandling(private val context: Context) {
                             puckBearingEnabled = hasPermission
                         }
                     }
-
                 }
                 Box(
                     modifier = modifier
@@ -148,13 +147,20 @@ class MapsHandling(private val context: Context) {
                 ) {
                     FloatingActionButton(
                         onClick = {
-                            //Dodac sprawdzanie czy puck dostepny
-                            mapViewportState.transitionToFollowPuckState(
-                                FollowPuckViewportStateOptions.Builder()
-                                    .pitch(0.0)
-                                    .zoom(15.0)
-                                    .build()
-                            )
+                            if (hasPermission) {
+                                mapViewportState.transitionToFollowPuckState(
+                                    FollowPuckViewportStateOptions.Builder()
+                                        .pitch(0.0)
+                                        .zoom(15.0)
+                                        .build()
+                                )
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "User's location unknown",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     ) {
                         Icon(
@@ -191,10 +197,16 @@ class MapsHandling(private val context: Context) {
             return null
         }
 
-        val location: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        val gpsLocation: Location? =
+            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
-        return if (location != null) {
-            Pair(location.latitude, location.longitude)
+        val networkLocation: Location? =
+            locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+        val finalLocation = gpsLocation ?: networkLocation
+
+        return if (finalLocation != null) {
+            Pair(finalLocation.latitude, finalLocation.longitude)
         } else {
             null
         }
