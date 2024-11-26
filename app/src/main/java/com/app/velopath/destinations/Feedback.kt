@@ -103,12 +103,17 @@ fun FeedbackPage(
 
         Button(
             onClick = {
-                onClick(message, name) {
-                    Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
-                }
+                if (name.isEmpty() || message.isEmpty()) {
+                    Toast.makeText(context, "Message and name can't be empty", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    onClick(message, name) {
+                        Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
+                    }
 
-                name = ""
-                message = ""
+                    name = ""
+                    message = ""
+                }
             },
             modifier = Modifier.padding(top = 8.dp)
         ) {
