@@ -1,5 +1,6 @@
 package com.app.velopath.destinations
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.app.velopath.R
-import com.app.velopath.isNetworkAvailable
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
 
@@ -35,7 +35,8 @@ fun PrintFeedback(
     modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit,
-    onFeedbackClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit
+    onFeedbackClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit,
+    networkAvailable: (context: Context) -> Boolean
 ) {
     Scaffold(
         topBar = {
@@ -50,14 +51,15 @@ fun PrintFeedback(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            FeedbackPage(onFeedbackClick)
+            FeedbackPage(onFeedbackClick, networkAvailable)
         }
     }
 }
 
 @Composable
 fun FeedbackPage(
-    onClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit
+    onClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit,
+    networkAvailable: (context: Context) -> Boolean
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var message by rememberSaveable { mutableStateOf("") }
@@ -114,10 +116,10 @@ fun FeedbackPage(
                             .show()
                     }
 
-                    !isNetworkAvailable(context) -> {
+                    !networkAvailable(context) -> {
                         Toast.makeText(
                             context,
-                            "Network error.",
+                            "Network error. Check connection",
                             Toast.LENGTH_SHORT
                         )
                             .show()

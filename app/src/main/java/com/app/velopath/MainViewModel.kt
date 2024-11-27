@@ -276,7 +276,8 @@ fun MainNavigation(
                         onClick = {
                             scope.launch { drawerState.open() }
                         },
-                        onFeedbackClick = database::addFeedbackMessage
+                        onFeedbackClick = database::addFeedbackMessage,
+                        networkAvailable = ::isNetworkAvailable
                     )
                 }
             }
