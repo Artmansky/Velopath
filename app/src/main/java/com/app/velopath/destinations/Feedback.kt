@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.app.velopath.R
+import com.app.velopath.isNetworkAvailable
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
 
@@ -103,16 +104,33 @@ fun FeedbackPage(
 
         Button(
             onClick = {
-                if (name.isEmpty() || message.isEmpty()) {
-                    Toast.makeText(context, "Message and name can't be empty", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    onClick(message, name) {
-                        Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
+                when {
+                    name.isEmpty() || message.isEmpty() -> {
+                        Toast.makeText(
+                            context,
+                            "Message and name can't be empty",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
                     }
 
-                    name = ""
-                    message = ""
+                    !isNetworkAvailable(context) -> {
+                        Toast.makeText(
+                            context,
+                            "Network error.",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+
+                    else -> {
+                        onClick(message, name) {
+                            Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
+                        }
+
+                        name = ""
+                        message = ""
+                    }
                 }
             },
             modifier = Modifier.padding(top = 8.dp)
