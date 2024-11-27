@@ -55,7 +55,11 @@ fun PrintSettings(
         if (isGranted) {
             Toast.makeText(context, "Location permission granted", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(context, "Location permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "Location permission denied or request blocked by system",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
