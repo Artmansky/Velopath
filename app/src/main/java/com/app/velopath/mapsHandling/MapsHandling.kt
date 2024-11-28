@@ -36,8 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.app.velopath.R
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -84,15 +87,36 @@ class MapsHandling(private val context: Context) {
             if (hasPermission) getCurrentLocation(context) else null
         } ?: defaultLocation
 
-        val uiSettings = remember { MapUiSettings(zoomControlsEnabled = true) }
-        val markers = remember { mutableStateListOf<LatLng>() }
-
-        val mapProperties = remember {
-            MapProperties(
-                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.dark_map),
-                isMyLocationEnabled = hasPermission
+        val cameraPositionState = remember {
+            CameraPositionState(
+                CameraPosition(
+                    LatLng(userLocation.first, userLocation.second),
+                    14f,
+                    0f,
+                    0f
+                )
             )
         }
+        val mapStyleOptions = remember(darkMode) {
+            if (darkMode) {
+                MapStyleOptions.loadRawResourceStyle(context, R.raw.dark_map)
+            } else {
+                null
+            }
+        }
+
+        val mapProperties =
+            remember {
+                mutableStateOf(
+                    MapProperties(
+                        isMyLocationEnabled = hasPermission,
+                        mapStyleOptions = mapStyleOptions
+                    )
+                )
+            }
+        val uiSettings =
+            remember { MapUiSettings(zoomControlsEnabled = false, myLocationButtonEnabled = false) }
+        val markers = remember { mutableStateListOf<LatLng>() }
 
         Column(modifier = modifier.fillMaxSize()) {
             Box(
@@ -102,17 +126,16 @@ class MapsHandling(private val context: Context) {
             ) {
                 GoogleMap(
                     modifier = Modifier.fillMaxSize(),
-                    properties = mapProperties,
+                    properties = mapProperties.value,
                     uiSettings = uiSettings,
+                    cameraPositionState = cameraPositionState,
                     onMapClick = { latLng ->
                         markers.add(latLng)
                     }
                 ) {
                     markers.forEach { latLng ->
                         Marker(
-                            state = MarkerState(position = latLng),
-                            title = "Marker at (${latLng.latitude}, ${latLng.longitude})",
-                            snippet = "This is a dynamically added marker."
+                            state = MarkerState(position = latLng)
                         )
                     }
                 }
@@ -145,7 +168,16 @@ class MapsHandling(private val context: Context) {
                     FloatingActionButton(
                         onClick = {
                             if (hasPermission) {
-
+                                cameraPositionState.move(
+                                    CameraUpdateFactory.newCameraPosition(
+                                        CameraPosition(
+                                            LatLng(
+                                                userLocation.first,
+                                                userLocation.second
+                                            ), 14f, 0f, 0f
+                                        )
+                                    )
+                                )
                             } else {
                                 Toast.makeText(
                                     context,
