@@ -91,7 +91,7 @@ class MapsHandling(private val context: Context) {
             CameraPositionState(
                 CameraPosition(
                     LatLng(userLocation.first, userLocation.second),
-                    14f,
+                    15f,
                     0f,
                     0f
                 )
@@ -174,7 +174,7 @@ class MapsHandling(private val context: Context) {
                                             LatLng(
                                                 userLocation.first,
                                                 userLocation.second
-                                            ), 14f, 0f, 0f
+                                            ), 15f, 0f, 0f
                                         )
                                     )
                                 )
@@ -227,7 +227,17 @@ class MapsHandling(private val context: Context) {
                             Text(text = "Add route")
                         }
                         Button(
-                            onClick = { },
+                            onClick = {
+                                if (markers.size != 0) {
+                                    markers.removeLast()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "No markers are placed",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(60.dp)
