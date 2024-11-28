@@ -79,8 +79,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\Tomek\Downloads\Velopath_Icon.png" />
-                                                <entry key="scalingPercent" value="59" />
+                                                <entry key="imagePath" value="C:\Users\Tomek\Downloads\red_marker.png" />
+                                                <entry key="scalingPercent" value="45" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -114,6 +114,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
+                                      <entry key="outputName" value="red_point" />
                                     </map>
                                   </option>
                                 </PersistentState>
