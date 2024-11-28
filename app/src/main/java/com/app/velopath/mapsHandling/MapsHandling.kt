@@ -32,17 +32,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.app.velopath.R
 import com.mapbox.geojson.Point
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
-import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
-import com.mapbox.maps.extension.compose.annotation.rememberIconImage
 import com.mapbox.maps.extension.compose.style.MapStyle
 import com.mapbox.maps.plugin.PuckBearing
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
@@ -114,13 +110,6 @@ class MapsHandling(private val context: Context) {
                         }
                     }
                 ) {
-                    val marker = rememberIconImage(
-                        key = R.drawable.red_marker,
-                        painter = painterResource(R.drawable.red_marker)
-                    )
-                    
-                    val point = PointAnnotation(point = (-73.977001, 40.728847), Point)
-
                     MapEffect(Unit) { mapView ->
                         mapView.location.updateSettings {
                             locationPuck = createDefault2DPuck(withBearing = true)
