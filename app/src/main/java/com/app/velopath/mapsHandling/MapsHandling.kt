@@ -105,6 +105,9 @@ class MapsHandling(private val context: Context) {
             }
         }
 
+        val isMarkingEnabled = remember {
+            mutableStateOf(false)
+        }
         val mapProperties =
             remember {
                 mutableStateOf(
@@ -130,7 +133,10 @@ class MapsHandling(private val context: Context) {
                     uiSettings = uiSettings,
                     cameraPositionState = cameraPositionState,
                     onMapClick = { latLng ->
-                        markers.add(latLng)
+                        if (isMarkingEnabled.value) {
+                            markers.add(latLng)
+                            isMarkingEnabled.value = false
+                        }
                     }
                 ) {
                     markers.forEach { latLng ->
@@ -219,7 +225,7 @@ class MapsHandling(private val context: Context) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
-                            onClick = { },
+                            onClick = { isMarkingEnabled.value = true },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(60.dp)
