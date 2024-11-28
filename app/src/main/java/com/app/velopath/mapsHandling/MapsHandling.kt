@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,16 +35,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.mapbox.geojson.Point
-import com.mapbox.maps.Style
-import com.mapbox.maps.extension.compose.MapEffect
-import com.mapbox.maps.extension.compose.MapboxMap
-import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
-import com.mapbox.maps.extension.compose.style.MapStyle
-import com.mapbox.maps.plugin.PuckBearing
-import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
-import com.mapbox.maps.plugin.locationcomponent.location
-import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
+import com.app.velopath.R
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 
 
 fun isLocationPermissionGranted(context: Context): Boolean {
@@ -81,16 +80,18 @@ class MapsHandling(private val context: Context) {
         hasPermission: Boolean,
         onClick: () -> Unit
     ) {
-        val mapViewportState = rememberMapViewportState()
-
         val userLocation = remember {
             if (hasPermission) getCurrentLocation(context) else null
         } ?: defaultLocation
 
-        mapViewportState.setCameraOptions {
-            center(Point.fromLngLat(userLocation.second, userLocation.first))
-            zoom(15.0)
-            pitch(0.0)
+        val uiSettings = remember { MapUiSettings(zoomControlsEnabled = true) }
+        val markers = remember { mutableStateListOf<LatLng>() }
+
+        val mapProperties = remember {
+            MapProperties(
+                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.dark_map),
+                isMyLocationEnabled = hasPermission
+            )
         }
 
         Column(modifier = modifier.fillMaxSize()) {
@@ -99,27 +100,20 @@ class MapsHandling(private val context: Context) {
                     .fillMaxWidth()
                     .weight(0.80f)
             ) {
-                MapboxMap(
-                    modifier = modifier.fillMaxSize(),
-                    mapViewportState = mapViewportState,
-                    style = {
-                        if (darkMode) {
-                            MapStyle(style = Style.DARK)
-                        } else {
-                            MapStyle(style = Style.LIGHT)
-                        }
+                GoogleMap(
+                    modifier = Modifier.fillMaxSize(),
+                    properties = mapProperties,
+                    uiSettings = uiSettings,
+                    onMapClick = { latLng ->
+                        markers.add(latLng)
                     }
                 ) {
-                    MapEffect(Unit) { mapView ->
-                        mapView.location.updateSettings {
-                            locationPuck = createDefault2DPuck(withBearing = true)
-
-                            enabled = hasPermission
-
-                            puckBearing = PuckBearing.COURSE
-
-                            puckBearingEnabled = hasPermission
-                        }
+                    markers.forEach { latLng ->
+                        Marker(
+                            state = MarkerState(position = latLng),
+                            title = "Marker at (${latLng.latitude}, ${latLng.longitude})",
+                            snippet = "This is a dynamically added marker."
+                        )
                     }
                 }
                 Box(
@@ -151,12 +145,7 @@ class MapsHandling(private val context: Context) {
                     FloatingActionButton(
                         onClick = {
                             if (hasPermission) {
-                                mapViewportState.transitionToFollowPuckState(
-                                    FollowPuckViewportStateOptions.Builder()
-                                        .pitch(0.0)
-                                        .zoom(15.0)
-                                        .build()
-                                )
+
                             } else {
                                 Toast.makeText(
                                     context,
