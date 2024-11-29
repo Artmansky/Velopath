@@ -50,6 +50,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 
 
 fun isLocationPermissionGranted(context: Context): Boolean {
@@ -192,6 +193,19 @@ class MapsHandling(private val context: Context) {
                             state = MarkerState(position = latLng),
                             draggable = true
                         )
+                    }
+
+                    if (markers.size > 1) {
+                        for (i in 0 until markers.size - 1) {
+                            Polyline(
+                                points = listOf(
+                                    markers[i],
+                                    markers[i + 1]
+                                ),
+                                color = MaterialTheme.colorScheme.primary,
+                                width = 5f
+                            )
+                        }
                     }
                 }
                 if (!isMapLoaded.value) {
