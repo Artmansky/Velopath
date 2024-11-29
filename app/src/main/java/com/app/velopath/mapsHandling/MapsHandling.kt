@@ -18,8 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
@@ -188,7 +189,8 @@ class MapsHandling(private val context: Context) {
                 ) {
                     markers.forEach { latLng ->
                         Marker(
-                            state = MarkerState(position = latLng)
+                            state = MarkerState(position = latLng),
+                            draggable = true
                         )
                     }
                 }
@@ -226,6 +228,24 @@ class MapsHandling(private val context: Context) {
                     modifier = modifier
                         .align(Alignment.BottomEnd)
                         .padding(16.dp)
+                        .padding(bottom = 64.dp)
+                ) {
+                    FloatingActionButton(
+                        onClick = {
+                            isMarkingEnabled.value = true
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Create,
+                            contentDescription = "Add Marker",
+                            modifier = modifier.size(32.dp)
+                        )
+                    }
+                }
+                Box(
+                    modifier = modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
                 ) {
                     FloatingActionButton(
                         onClick = {
@@ -250,7 +270,7 @@ class MapsHandling(private val context: Context) {
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Star,
+                            imageVector = Icons.Default.LocationOn,
                             contentDescription = "Follow Location",
                             modifier = modifier.size(32.dp)
                         )
@@ -275,13 +295,12 @@ class MapsHandling(private val context: Context) {
                     ) {
                         Text(text = "Discover nearby routes")
                     }
-
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
-                            onClick = { isMarkingEnabled.value = true },
+                            onClick = {},
                             modifier = Modifier
                                 .weight(1f)
                                 .height(60.dp)
