@@ -43,6 +43,7 @@ fun PrintProfile(
     title: String,
     onClick: () -> Unit,
     userData: FirebaseUser?,
+    isDarkMode: Boolean,
     context: Context
 ) {
     Scaffold(
@@ -64,7 +65,7 @@ fun PrintProfile(
                     .fillMaxWidth()
                     .padding(12.dp),
                 shape = RoundedCornerShape(16.dp),
-                shadowElevation = 4.dp,
+                tonalElevation = 4.dp
             ) {
                 Column(
                     modifier = Modifier
@@ -90,15 +91,14 @@ fun PrintProfile(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
                 shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface,
-                shadowElevation = 4.dp,
+                tonalElevation = 4.dp
             ) {
                 Column(
                     modifier = Modifier
@@ -136,7 +136,7 @@ fun PrintProfile(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Row(
                 modifier = Modifier
@@ -149,7 +149,7 @@ fun PrintProfile(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            AnimatedExpandableList(routeItems, context)
+            AnimatedExpandableList(routeItems, isDarkMode, context)
         }
     }
 }

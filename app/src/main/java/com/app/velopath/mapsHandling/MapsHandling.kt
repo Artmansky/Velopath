@@ -148,7 +148,13 @@ class MapsHandling(private val context: Context) {
                 )
             }
         val uiSettings =
-            remember { MapUiSettings(zoomControlsEnabled = false, myLocationButtonEnabled = false) }
+            remember {
+                MapUiSettings(
+                    zoomControlsEnabled = false,
+                    myLocationButtonEnabled = false,
+                    rotationGesturesEnabled = false
+                )
+            }
         val markers = remember { mutableStateListOf<LatLng>() }
         val isMapLoaded = remember { mutableStateOf(false) }
 

@@ -226,6 +226,7 @@ fun MainNavigation(
                             scope.launch { drawerState.open() }
                         },
                         userData = user,
+                        isDarkMode = isDarkTheme,
                         context = context
                     )
                 }
@@ -237,6 +238,7 @@ fun MainNavigation(
                         onClick = {
                             scope.launch { drawerState.open() }
                         },
+                        isDarkMode = isDarkTheme,
                         context = context
                     )
                 }

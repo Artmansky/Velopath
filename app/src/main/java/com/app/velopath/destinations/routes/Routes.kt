@@ -15,6 +15,7 @@ object Routes
 @Composable
 fun PrintRoutes(
     modifier: Modifier = Modifier,
+    isDarkMode: Boolean,
     title: String,
     onClick: () -> Unit,
     context: Context
@@ -28,7 +29,7 @@ fun PrintRoutes(
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            AnimatedExpandableList(routeItems, context)
+            AnimatedExpandableList(routeItems, isDarkMode, context)
         }
     }
 }
