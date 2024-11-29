@@ -90,7 +90,7 @@ val routeItems = listOf(
 
 @Composable
 fun AnimatedExpandableList(itemsDisplay: List<RouteItem>, isDarkMode: Boolean, context: Context) {
-    val isAuthor = true
+    val isAuthor = false
     val expandedItems = remember {
         mutableStateListOf(*BooleanArray(itemsDisplay.size) { false }.toTypedArray())
     }
