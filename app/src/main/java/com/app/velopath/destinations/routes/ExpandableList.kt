@@ -1,6 +1,8 @@
 package com.app.velopath.destinations.routes
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
@@ -24,6 +26,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +60,7 @@ val routeItems = listOf(
         title = "Introduction to Kotlin",
         author = "John Doe",
         id = "1",
-        navigationLink = "/intro-to-kotlin"
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal"
     ),
     RouteItem(
         title = "Advanced Compose Techniques",
@@ -112,7 +115,6 @@ fun AnimatedExpandableList(itemsDisplay: List<RouteItem>, isDarkMode: Boolean, c
                 context = context,
                 mapStyleOptions = mapStyleOptions,
                 item = item,
-                index = index,
                 isExpanded = expandedItems[index],
                 isAuthor = isAuthor,
                 onExpandedChange = { expandedItems[index] = it }
@@ -126,7 +128,6 @@ fun ExpandedItem(
     context: Context,
     mapStyleOptions: MapStyleOptions?,
     item: RouteItem,
-    index: Int,
     isExpanded: Boolean,
     isAuthor: Boolean,
     onExpandedChange: (Boolean) -> Unit
@@ -155,6 +156,17 @@ fun ExpandedItem(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
+                if (!isAuthor) {
+                    Icon(
+                        imageVector = Icons.Outlined.Star,
+                        contentDescription = "Like",
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .clickable {
+                                //Zaimplementowac onclicka
+                            }
+                    )
+                }
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = if (isExpanded) "Collapse" else "Expand",
@@ -173,8 +185,7 @@ fun ExpandedItem(
                 ) {
                     Text(
                         text = "Route display:",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
@@ -203,7 +214,14 @@ fun ExpandedItem(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        Button(onClick = {}) {
+                        Button(onClick = {
+                            val mapIntent = Intent(
+                                Intent.ACTION_VIEW, Uri.parse(item.navigationLink)
+                            )
+                            mapIntent.setPackage("com.google.android.apps.maps")
+
+                            context.startActivity(mapIntent)
+                        }) {
                             Text("Ride")
                         }
                         Spacer(modifier = Modifier.width(8.dp))
