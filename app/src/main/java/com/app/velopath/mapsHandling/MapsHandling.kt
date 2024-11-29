@@ -21,8 +21,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.app.velopath.R
+import com.app.velopath.isNetworkAvailable
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -97,6 +100,7 @@ class MapsHandling(private val context: Context) {
                 )
             )
         }
+
         val mapStyleOptions = remember(darkMode) {
             if (darkMode) {
                 MapStyleOptions.loadRawResourceStyle(context, R.raw.dark_map)
@@ -120,6 +124,7 @@ class MapsHandling(private val context: Context) {
         val uiSettings =
             remember { MapUiSettings(zoomControlsEnabled = false, myLocationButtonEnabled = false) }
         val markers = remember { mutableStateListOf<LatLng>() }
+        val isMapLoaded = remember { mutableStateOf(false) }
 
         Column(modifier = modifier.fillMaxSize()) {
             Box(
@@ -137,6 +142,16 @@ class MapsHandling(private val context: Context) {
                             markers.add(latLng)
                             isMarkingEnabled.value = false
                         }
+                    },
+                    onMapLoaded = {
+                        if (!isNetworkAvailable(context)) {
+                            Toast.makeText(
+                                context,
+                                "Map may not load. Check Internet",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        isMapLoaded.value = true
                     }
                 ) {
                     markers.forEach { latLng ->
@@ -144,6 +159,15 @@ class MapsHandling(private val context: Context) {
                             state = MarkerState(position = latLng)
                         )
                     }
+                }
+                if (!isMapLoaded.value) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(64.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                        strokeWidth = 6.dp
+                    )
                 }
                 Box(
                     modifier = modifier
@@ -255,6 +279,7 @@ class MapsHandling(private val context: Context) {
             }
         }
     }
+
 
     private fun getCurrentLocation(context: Context): Pair<Double, Double>? {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
