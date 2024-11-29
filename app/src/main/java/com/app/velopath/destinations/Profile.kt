@@ -1,5 +1,6 @@
 package com.app.velopath.destinations
 
+import android.content.Context
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,8 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.app.velopath.destinations.routes.AnimatedExpandableList
+import com.app.velopath.destinations.routes.routeItems
 import com.app.velopath.ui.TopBar
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.serialization.Serializable
@@ -39,7 +42,8 @@ fun PrintProfile(
     modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit,
-    userData: FirebaseUser?
+    userData: FirebaseUser?,
+    context: Context
 ) {
     Scaffold(
         topBar = {
@@ -60,7 +64,6 @@ fun PrintProfile(
                     .fillMaxWidth()
                     .padding(12.dp),
                 shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface,
                 shadowElevation = 4.dp,
             ) {
                 Column(
@@ -108,11 +111,11 @@ fun PrintProfile(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Stat 1", style = MaterialTheme.typography.bodyMedium)
+                            Text("Total added", style = MaterialTheme.typography.bodyMedium)
                             Text("Value 1", style = MaterialTheme.typography.bodyLarge)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Stat 2", style = MaterialTheme.typography.bodyMedium)
+                            Text("Total liked", style = MaterialTheme.typography.bodyMedium)
                             Text("Value 2", style = MaterialTheme.typography.bodyLarge)
                         }
                     }
@@ -122,26 +125,12 @@ fun PrintProfile(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Stat 3", style = MaterialTheme.typography.bodyMedium)
+                            Text("Total likes", style = MaterialTheme.typography.bodyMedium)
                             Text("Value 3", style = MaterialTheme.typography.bodyLarge)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Stat 4", style = MaterialTheme.typography.bodyMedium)
+                            Text("Total routes", style = MaterialTheme.typography.bodyMedium)
                             Text("Value 4", style = MaterialTheme.typography.bodyLarge)
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Stat 5", style = MaterialTheme.typography.bodyMedium)
-                            Text("Value 5", style = MaterialTheme.typography.bodyLarge)
-                        }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Stat 6", style = MaterialTheme.typography.bodyMedium)
-                            Text("Value 6", style = MaterialTheme.typography.bodyLarge)
                         }
                     }
                 }
@@ -156,38 +145,11 @@ fun PrintProfile(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = "Your top 3 routes:",
+                    text = "Your added routes:",
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            for (i in 1..3) {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 4.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surface,
-                    shadowElevation = 2.dp
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Route $i",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            text = "50 Likes",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-            }
+            AnimatedExpandableList(routeItems, context)
         }
     }
 }

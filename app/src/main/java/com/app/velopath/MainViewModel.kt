@@ -34,11 +34,11 @@ import com.app.velopath.destinations.PrintFeedback
 import com.app.velopath.destinations.PrintHome
 import com.app.velopath.destinations.PrintInfo
 import com.app.velopath.destinations.PrintProfile
-import com.app.velopath.destinations.PrintRoutes
 import com.app.velopath.destinations.PrintSettings
 import com.app.velopath.destinations.Profile
-import com.app.velopath.destinations.Routes
 import com.app.velopath.destinations.Settings
+import com.app.velopath.destinations.routes.PrintRoutes
+import com.app.velopath.destinations.routes.Routes
 import com.app.velopath.login.PrintSignInScreen
 import com.app.velopath.login.SignInScreen
 import com.app.velopath.mapsHandling.MapsHandling
@@ -225,16 +225,19 @@ fun MainNavigation(
                         onClick = {
                             scope.launch { drawerState.open() }
                         },
-                        userData = user
+                        userData = user,
+                        context = context
                     )
                 }
                 composable<Routes> {
                     selectedItemIndex = 2
                     gestures.value = true
-                    PrintRoutes(title = items[selectedItemIndex].title,
+                    PrintRoutes(
+                        title = items[selectedItemIndex].title,
                         onClick = {
                             scope.launch { drawerState.open() }
-                        }
+                        },
+                        context = context
                     )
                 }
                 composable<Info> {

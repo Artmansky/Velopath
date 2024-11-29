@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.app.velopath.destinations.routes.Routes
 
 data class NavigationItem(
     val title: String,

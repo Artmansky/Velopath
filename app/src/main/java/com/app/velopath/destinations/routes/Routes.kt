@@ -1,14 +1,11 @@
-package com.app.velopath.destinations
+package com.app.velopath.destinations.routes
 
+import android.content.Context
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
 
@@ -19,7 +16,8 @@ object Routes
 fun PrintRoutes(
     modifier: Modifier = Modifier,
     title: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    context: Context
 ) {
     Scaffold(
         topBar = {
@@ -28,17 +26,9 @@ fun PrintRoutes(
                 onDrawerClick = onClick
             )
         }
-    ) { contentPadding ->
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(contentPadding),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Hello Routes",
-                textAlign = TextAlign.Center
-            )
+    ) { padding ->
+        Box(modifier = Modifier.padding(padding)) {
+            AnimatedExpandableList(routeItems, context)
         }
     }
 }
