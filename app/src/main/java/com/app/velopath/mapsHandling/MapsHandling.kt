@@ -58,6 +58,32 @@ fun isLocationPermissionGranted(context: Context): Boolean {
     ) == PackageManager.PERMISSION_GRANTED
 }
 
+fun getCurrentLocation(context: Context): Pair<Double, Double>? {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+    if (ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        return null
+    }
+
+    val gpsLocation: Location? =
+        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+    val networkLocation: Location? =
+        locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+    val finalLocation = gpsLocation ?: networkLocation
+
+    return if (finalLocation != null) {
+        Pair(finalLocation.latitude, finalLocation.longitude)
+    } else {
+        null
+    }
+}
+
 class MapsHandling(private val context: Context) {
     private var defaultLocation: Pair<Double, Double> = Pair(-73.977001, 40.728847)
 
@@ -277,33 +303,6 @@ class MapsHandling(private val context: Context) {
                     }
                 }
             }
-        }
-    }
-
-
-    private fun getCurrentLocation(context: Context): Pair<Double, Double>? {
-        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return null
-        }
-
-        val gpsLocation: Location? =
-            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
-        val networkLocation: Location? =
-            locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-
-        val finalLocation = gpsLocation ?: networkLocation
-
-        return if (finalLocation != null) {
-            Pair(finalLocation.latitude, finalLocation.longitude)
-        } else {
-            null
         }
     }
 }
