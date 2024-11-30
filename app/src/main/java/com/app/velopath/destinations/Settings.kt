@@ -89,7 +89,7 @@ fun PrintSettings(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Click here to grant localization permissions if they are not granted",
+                            text = "Click here to grant localization permissions and gain full maps experience",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.weight(1f)
                         )
