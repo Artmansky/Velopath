@@ -57,31 +57,31 @@ data class RouteItem(
 
 val routeItems = listOf(
     RouteItem(
-        title = "Introduction to Kotlin",
+        title = "Road near the lake",
         author = "John Doe",
         id = "1",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal"
     ),
     RouteItem(
-        title = "Advanced Compose Techniques",
+        title = "take me here when you can",
         author = "Jane Smith",
         id = "2",
         navigationLink = "/advanced-compose"
     ),
     RouteItem(
-        title = "Understanding Coroutines",
+        title = "My new route",
         author = "Alice Johnson",
         id = "3",
         navigationLink = "/understanding-coroutines"
     ),
     RouteItem(
-        title = "State Management in Jetpack Compose",
+        title = "Road near the park",
         author = "Robert Brown",
         id = "4",
         navigationLink = "/state-management"
     ),
     RouteItem(
-        title = "Navigation in Compose",
+        title = "100km's in one drive",
         author = "Emily Davis",
         id = "5",
         navigationLink = "/navigation-in-compose"
