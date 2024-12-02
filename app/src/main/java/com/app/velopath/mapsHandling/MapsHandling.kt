@@ -190,7 +190,7 @@ class MapsHandling(private val context: Context) {
                 ) {
                     markers.forEach { latLng ->
                         Marker(
-                            state = MarkerState(position = latLng),
+                            state = MarkerState(position = latLng)
                         )
                     }
 
