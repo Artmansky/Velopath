@@ -57,6 +57,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.google.android.maps.utils)
     implementation(libs.coil.network.okhttp)
     implementation(libs.coil.compose)
     implementation(libs.androidx.core.splashscreen)

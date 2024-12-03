@@ -38,7 +38,7 @@ object GlobalData {
             destinationNav = Profile
         ),
         NavigationItem(
-            title = "Your Routes",
+            title = "Saved Routes",
             selectedIcon = Icons.Filled.Place,
             unselectedIcon = Icons.Outlined.Place,
             destinationNav = Routes

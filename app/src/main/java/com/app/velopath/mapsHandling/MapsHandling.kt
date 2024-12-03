@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,12 +39,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
+import com.app.velopath.handlers.buildDirectionsUrl
 import com.app.velopath.isNetworkAvailable
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.PolyUtil
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -313,7 +317,34 @@ class MapsHandling(private val context: Context) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
-                            onClick = {},
+                            onClick = {
+
+
+                                val origin = LatLng(33.8121, -117.9190)
+                                val destination = LatLng(
+                                    34.1381,
+                                    -118.3534
+                                )
+                                val apiKey = getString(context, R.string.google_api_routes)
+                                val waypoints = listOf(
+                                    LatLng(34.0242, -118.4965),
+                                    LatLng(33.9850, -118.4695)
+                                )
+
+                                val directionsUrl =
+                                    buildDirectionsUrl(origin, destination, apiKey, waypoints)
+                                Log.i("package:mine", directionsUrl)
+
+                                val decoded =
+                                    PolyUtil.decode("esjmEr`vnUPQPSHI@ABA@AB?B?@?B@B?@@@@@@VM@ADABA@?RAJ?F@F@DD")
+
+                                decoded.forEachIndexed { index, latLng ->
+                                    Log.i(
+                                        "PolylinePoint",
+                                        "Point $index: Latitude=${latLng.latitude}, Longitude=${latLng.longitude}"
+                                    )
+                                }
+                            },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(60.dp)
