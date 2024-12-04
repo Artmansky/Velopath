@@ -57,6 +57,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.converter.gson)
     implementation(libs.google.android.maps.utils)
     implementation(libs.coil.network.okhttp)
     implementation(libs.coil.compose)

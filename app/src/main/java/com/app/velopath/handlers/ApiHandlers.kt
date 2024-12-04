@@ -26,3 +26,4 @@ fun buildDirectionsUrl(
 
     return "$baseUrl?$queryParams"
 }
+
