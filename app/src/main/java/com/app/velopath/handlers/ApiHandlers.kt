@@ -41,7 +41,7 @@ fun buildDirectionsUrl(
 
 fun test(context: Context) {
 
-    val apiKey = getString(context, R.string.google_api_routes)
+    val apiKey = getString(context, R.string.google_directions_api)
 
 
     val origin = "33.8121,-117.919"
