@@ -1,4 +1,4 @@
-package com.app.velopath.handlers
+package com.app.velopath.handlers.directions
 
 import retrofit2.Call
 import retrofit2.http.GET

@@ -1,4 +1,4 @@
-package com.app.velopath.handlers
+package com.app.velopath.handlers.directions
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

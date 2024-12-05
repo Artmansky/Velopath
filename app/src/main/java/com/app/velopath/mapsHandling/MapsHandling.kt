@@ -2,9 +2,6 @@ package com.app.velopath.mapsHandling
 
 import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -37,10 +35,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.app.velopath.R
+import com.app.velopath.handlers.getCurrentLocation
 import com.app.velopath.handlers.getDirections
-import com.app.velopath.isNetworkAvailable
+import com.app.velopath.handlers.isLocationPermissionGranted
+import com.app.velopath.handlers.isNetworkAvailable
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -53,39 +52,6 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 
-
-fun isLocationPermissionGranted(context: Context): Boolean {
-    return ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
-}
-
-fun getCurrentLocation(context: Context): Pair<Double, Double>? {
-    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-    if (ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
-    ) {
-        return null
-    }
-
-    val gpsLocation: Location? =
-        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
-    val networkLocation: Location? =
-        locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-
-    val finalLocation = gpsLocation ?: networkLocation
-
-    return if (finalLocation != null) {
-        Pair(finalLocation.latitude, finalLocation.longitude)
-    } else {
-        null
-    }
-}
 
 class MapsHandling(private val context: Context) {
     private var defaultLocation: Pair<Double, Double> = Pair(-73.977001, 40.728847)
@@ -138,9 +104,6 @@ class MapsHandling(private val context: Context) {
             }
         }
 
-        val isMarkingEnabled = remember {
-            mutableStateOf(false)
-        }
         val mapProperties =
             remember {
                 mutableStateOf(
@@ -150,6 +113,7 @@ class MapsHandling(private val context: Context) {
                     )
                 )
             }
+
         val uiSettings =
             remember {
                 MapUiSettings(
@@ -158,6 +122,8 @@ class MapsHandling(private val context: Context) {
                     rotationGesturesEnabled = false
                 )
             }
+
+        val isMarkingEnabled = remember { mutableStateOf(false) }
         val markers = remember { mutableStateListOf<LatLng>() }
         val isMapLoaded = remember { mutableStateOf(false) }
         val polylines = remember { mutableStateOf<List<LatLng>?>(null) }
@@ -174,21 +140,18 @@ class MapsHandling(private val context: Context) {
                     uiSettings = uiSettings,
                     cameraPositionState = cameraPositionState,
                     onMapClick = { latLng ->
-                        if (isMarkingEnabled.value) {
-                            markers.add(latLng)
-                            isMarkingEnabled.value = false
-
-                            if (markers.size > 1) {
-                                getDirections(
-                                    markers,
-                                    context
-                                ) { newPolylines ->
-                                    polylines.value = newPolylines
-                                }
-                            } else {
-                                polylines.value = null
-                            }
-                        }
+                        placeMarker(latLng, isMarkingEnabled, markers, polylines)
+                    },
+                    onPOIClick = { latLng ->
+                        placeMarker(latLng.latLng, isMarkingEnabled, markers, polylines)
+                    },
+                    onMyLocationClick = { latLng ->
+                        placeMarker(
+                            LatLng(latLng.latitude, latLng.longitude),
+                            isMarkingEnabled,
+                            markers,
+                            polylines
+                        )
                     },
                     onMapLoaded = {
                         if (!isNetworkAvailable(context)) {
@@ -215,7 +178,7 @@ class MapsHandling(private val context: Context) {
                                 Polyline(
                                     points = listOf(point1, point2),
                                     color = MaterialTheme.colorScheme.primary,
-                                    width = 5f
+                                    width = 10f
                                 )
                             }
                         }
@@ -346,6 +309,13 @@ class MapsHandling(private val context: Context) {
                                             markers,
                                             context
                                         ) { newPolylines ->
+                                            if (newPolylines.isNullOrEmpty()) {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Service not available.",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
                                             polylines.value = newPolylines
                                         }
                                     } else {
@@ -367,6 +337,36 @@ class MapsHandling(private val context: Context) {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun placeMarker(
+        latLang: LatLng,
+        markingEnabled: MutableState<Boolean>,
+        markers: MutableList<LatLng>,
+        polylines: MutableState<List<LatLng>?>
+    ) {
+        if (markingEnabled.value) {
+            markers.add(latLang)
+            markingEnabled.value = false
+
+            if (markers.size > 1) {
+                getDirections(
+                    markers,
+                    context
+                ) { newPolylines ->
+                    if (newPolylines.isNullOrEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Service not available.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    polylines.value = newPolylines
+                }
+            } else {
+                polylines.value = null
             }
         }
     }

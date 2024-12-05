@@ -3,6 +3,8 @@ package com.app.velopath.handlers
 import android.content.Context
 import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
+import com.app.velopath.handlers.directions.DirectionsJson
+import com.app.velopath.handlers.directions.RetrofitClient
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 import retrofit2.Call

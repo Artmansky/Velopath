@@ -1,4 +1,4 @@
-package com.app.velopath.handlers
+package com.app.velopath.handlers.directions
 
 data class DirectionsJson(
     val routes: List<Route>,
