@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,8 +39,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
-import com.app.velopath.handlers.test
+import com.app.velopath.handlers.getDirections
 import com.app.velopath.isNetworkAvailable
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -160,6 +162,13 @@ class MapsHandling(private val context: Context) {
             }
         val markers = remember { mutableStateListOf<LatLng>() }
         val isMapLoaded = remember { mutableStateOf(false) }
+        val polylines = remember { mutableStateOf<List<LatLng>?>(null) }
+
+        LaunchedEffect(polylines.value) {
+            if (polylines.value != null) {
+                Log.d("Polylines", "Polylines updated: ${polylines.value}")
+            }
+        }
 
         Column(modifier = modifier.fillMaxSize()) {
             Box(
@@ -194,16 +203,18 @@ class MapsHandling(private val context: Context) {
                             state = MarkerState(position = latLng)
                         )
                     }
-                    if (markers.size > 1) {
-                        for (i in 0 until markers.size - 1) {
-                            Polyline(
-                                points = listOf(
-                                    markers[i],
-                                    markers[i + 1]
-                                ),
-                                color = MaterialTheme.colorScheme.primary,
-                                width = 5f
-                            )
+
+                    polylines.value?.let { polylineList ->
+                        if (polylineList.size > 1) {
+                            for (i in 0 until polylineList.size - 1) {
+                                val point1 = polylineList[i]
+                                val point2 = polylineList[i + 1]
+                                Polyline(
+                                    points = listOf(point1, point2),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    width = 5f
+                                )
+                            }
                         }
                     }
                 }
@@ -316,9 +327,25 @@ class MapsHandling(private val context: Context) {
                             onClick = {
 
 
-                                test(context)
+                                val apiKey = getString(context, R.string.google_directions_api)
+                                val origin = markers.first()
+                                val destination = markers.last()
+                                val waypoints: List<LatLng>? =
+                                    if (markers.size > 2) markers.subList(
+                                        1,
+                                        markers.size - 1
+                                    ) else null
 
-
+                                getDirections(
+                                    origin,
+                                    destination,
+                                    waypoints,
+                                    apiKey
+                                ) { newPolylines ->
+                                    Log.d("Polylines", "New Polylines: $newPolylines")
+                                    polylines.value =
+                                        newPolylines  // Update polylines with the result
+                                }
                             },
                             modifier = Modifier
                                 .weight(1f)
