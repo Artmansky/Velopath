@@ -133,9 +133,11 @@ fun MainNavigation(
                 selectedItemIndex = selectedItemIndex,
                 onItemSelected = { index ->
                     scope.launch { drawerState.close() }
-                    navController.navigate(items[index].destinationNav) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                    if (index != selectedItemIndex) {
+                        navController.navigate(items[index].destinationNav) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
                         }
                     }
                 },

@@ -1,6 +1,8 @@
 package com.app.velopath.handlers
 
-import android.util.Log
+import android.content.Context
+import androidx.core.content.ContextCompat.getString
+import com.app.velopath.R
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 import retrofit2.Call
@@ -9,16 +11,22 @@ import retrofit2.Response
 
 
 fun getDirections(
-    origin: LatLng,
-    destination: LatLng,
-    waypoints: List<LatLng>?,
-    apiKey: String,
+    markers: List<LatLng>,
+    context: Context,
     callback: (List<LatLng>?) -> Unit
 ) {
+    val apiKey = getString(context, R.string.google_directions_api)
+
+    val (origin, destination) = markers.run { first() to last() }
+
+    val waypointsString = markers
+        .drop(1)
+        .dropLast(1)
+        .takeIf { it.isNotEmpty() }
+        ?.joinToString("|") { "${it.latitude},${it.longitude}" }
+
     val originString = "${origin.latitude},${origin.longitude}"
     val destinationString = "${destination.latitude},${destination.longitude}"
-    val waypointsString =
-        waypoints?.joinToString(separator = "|") { "${it.latitude},${it.longitude}" }
 
     val call = RetrofitClient.apiService.getDirections(
         origin = originString,
@@ -34,24 +42,17 @@ fun getDirections(
                 if (directionsResponse != null && directionsResponse.status == "OK") {
                     val polylinePoints =
                         PolyUtil.decode(directionsResponse.routes[0].overview_polyline.points)
-                    Log.d("DirectionsAPI", "Decoded polyline points: ")
-                    polylinePoints.forEach {
-                        Log.d("DirectionsAPI", "Lat: ${it.latitude}, Lng: ${it.longitude}")
-                    }
-                    callback(polylinePoints)  // Call the callback with the decoded points
+                    callback(polylinePoints)
                 } else {
-                    Log.d("DirectionsAPI", "No routes found or status not OK")
-                    callback(null)  // Return null if no routes are found
+                    callback(null)
                 }
             } else {
-                Log.d("DirectionsAPI", "Error: ${response.code()}")
-                callback(null)  // Return null on error
+                callback(null)
             }
         }
 
         override fun onFailure(call: Call<DirectionsJson>, t: Throwable) {
-            Log.e("DirectionsAPI", "Failed to get directions: ${t.message}")
-            callback(null)  // Return null on failure
+            callback(null)
         }
     })
 }

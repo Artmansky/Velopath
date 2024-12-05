@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import com.app.velopath.handlers.getDirections
 import com.app.velopath.isNetworkAvailable
@@ -164,12 +162,6 @@ class MapsHandling(private val context: Context) {
         val isMapLoaded = remember { mutableStateOf(false) }
         val polylines = remember { mutableStateOf<List<LatLng>?>(null) }
 
-        LaunchedEffect(polylines.value) {
-            if (polylines.value != null) {
-                Log.d("Polylines", "Polylines updated: ${polylines.value}")
-            }
-        }
-
         Column(modifier = modifier.fillMaxSize()) {
             Box(
                 modifier = modifier
@@ -186,24 +178,15 @@ class MapsHandling(private val context: Context) {
                             markers.add(latLng)
                             isMarkingEnabled.value = false
 
-                            val apiKey = getString(context, R.string.google_directions_api)
-                            val origin = markers.first()
-                            val destination = markers.last()
-                            val waypoints: List<LatLng>? =
-                                if (markers.size > 2) markers.subList(
-                                    1,
-                                    markers.size - 1
-                                ) else null
-
-                            getDirections(
-                                origin,
-                                destination,
-                                waypoints,
-                                apiKey
-                            ) { newPolylines ->
-                                Log.d("Polylines", "New Polylines: $newPolylines")
-                                polylines.value =
-                                    newPolylines  // Update polylines with the result
+                            if (markers.size > 1) {
+                                getDirections(
+                                    markers,
+                                    context
+                                ) { newPolylines ->
+                                    polylines.value = newPolylines
+                                }
+                            } else {
+                                polylines.value = null
                             }
                         }
                     },
@@ -358,26 +341,12 @@ class MapsHandling(private val context: Context) {
                             onClick = {
                                 if (markers.size != 0) {
                                     markers.removeLast()
-                                    if (markers.size > 2) {
-                                        val apiKey =
-                                            getString(context, R.string.google_directions_api)
-                                        val origin = markers.first()
-                                        val destination = markers.last()
-                                        val waypoints: List<LatLng>? =
-                                            if (markers.size > 2) markers.subList(
-                                                1,
-                                                markers.size - 1
-                                            ) else null
-
+                                    if (markers.size > 1) {
                                         getDirections(
-                                            origin,
-                                            destination,
-                                            waypoints,
-                                            apiKey
+                                            markers,
+                                            context
                                         ) { newPolylines ->
-                                            Log.d("Polylines", "New Polylines: $newPolylines")
-                                            polylines.value =
-                                                newPolylines
+                                            polylines.value = newPolylines
                                         }
                                     } else {
                                         polylines.value = null
