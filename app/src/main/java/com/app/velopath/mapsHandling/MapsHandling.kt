@@ -185,6 +185,26 @@ class MapsHandling(private val context: Context) {
                         if (isMarkingEnabled.value) {
                             markers.add(latLng)
                             isMarkingEnabled.value = false
+
+                            val apiKey = getString(context, R.string.google_directions_api)
+                            val origin = markers.first()
+                            val destination = markers.last()
+                            val waypoints: List<LatLng>? =
+                                if (markers.size > 2) markers.subList(
+                                    1,
+                                    markers.size - 1
+                                ) else null
+
+                            getDirections(
+                                origin,
+                                destination,
+                                waypoints,
+                                apiKey
+                            ) { newPolylines ->
+                                Log.d("Polylines", "New Polylines: $newPolylines")
+                                polylines.value =
+                                    newPolylines  // Update polylines with the result
+                            }
                         }
                     },
                     onMapLoaded = {
@@ -327,25 +347,6 @@ class MapsHandling(private val context: Context) {
                             onClick = {
 
 
-                                val apiKey = getString(context, R.string.google_directions_api)
-                                val origin = markers.first()
-                                val destination = markers.last()
-                                val waypoints: List<LatLng>? =
-                                    if (markers.size > 2) markers.subList(
-                                        1,
-                                        markers.size - 1
-                                    ) else null
-
-                                getDirections(
-                                    origin,
-                                    destination,
-                                    waypoints,
-                                    apiKey
-                                ) { newPolylines ->
-                                    Log.d("Polylines", "New Polylines: $newPolylines")
-                                    polylines.value =
-                                        newPolylines  // Update polylines with the result
-                                }
                             },
                             modifier = Modifier
                                 .weight(1f)
@@ -357,6 +358,30 @@ class MapsHandling(private val context: Context) {
                             onClick = {
                                 if (markers.size != 0) {
                                     markers.removeLast()
+                                    if (markers.size > 2) {
+                                        val apiKey =
+                                            getString(context, R.string.google_directions_api)
+                                        val origin = markers.first()
+                                        val destination = markers.last()
+                                        val waypoints: List<LatLng>? =
+                                            if (markers.size > 2) markers.subList(
+                                                1,
+                                                markers.size - 1
+                                            ) else null
+
+                                        getDirections(
+                                            origin,
+                                            destination,
+                                            waypoints,
+                                            apiKey
+                                        ) { newPolylines ->
+                                            Log.d("Polylines", "New Polylines: $newPolylines")
+                                            polylines.value =
+                                                newPolylines  // Update polylines with the result
+                                        }
+                                    } else {
+                                        polylines.value = null
+                                    }
                                 } else {
                                     Toast.makeText(
                                         context,
