@@ -377,7 +377,7 @@ class MapsHandling(private val context: Context) {
                                         ) { newPolylines ->
                                             Log.d("Polylines", "New Polylines: $newPolylines")
                                             polylines.value =
-                                                newPolylines  // Update polylines with the result
+                                                newPolylines
                                         }
                                     } else {
                                         polylines.value = null
