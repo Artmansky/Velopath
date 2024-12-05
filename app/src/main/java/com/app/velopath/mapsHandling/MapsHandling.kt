@@ -36,8 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.velopath.R
+import com.app.velopath.handlers.ApiHandlers
 import com.app.velopath.handlers.getCurrentLocation
-import com.app.velopath.handlers.getDirections
 import com.app.velopath.handlers.isLocationPermissionGranted
 import com.app.velopath.handlers.isNetworkAvailable
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -55,6 +55,7 @@ import com.google.maps.android.compose.Polyline
 
 class MapsHandling(private val context: Context) {
     private var defaultLocation: Pair<Double, Double> = Pair(-73.977001, 40.728847)
+    private var apiHandler: ApiHandlers = ApiHandlers(context)
 
     @Composable
     fun PrintMap(modifier: Modifier, darkMode: Boolean, onClick: () -> Unit) {
@@ -305,9 +306,8 @@ class MapsHandling(private val context: Context) {
                                 if (markers.size != 0) {
                                     markers.removeLast()
                                     if (markers.size > 1) {
-                                        getDirections(
-                                            markers,
-                                            context
+                                        apiHandler.getDirections(
+                                            markers
                                         ) { newPolylines ->
                                             if (newPolylines.isNullOrEmpty()) {
                                                 Toast.makeText(
@@ -352,9 +352,8 @@ class MapsHandling(private val context: Context) {
             markingEnabled.value = false
 
             if (markers.size > 1) {
-                getDirections(
-                    markers,
-                    context
+                apiHandler.getDirections(
+                    markers
                 ) { newPolylines ->
                     if (newPolylines.isNullOrEmpty()) {
                         Toast.makeText(

@@ -11,50 +11,58 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+class ApiHandlers(private val context: Context) {
+    private val apiKey = getString(context, R.string.google_directions_api)
 
-fun getDirections(
-    markers: List<LatLng>,
-    context: Context,
-    callback: (List<LatLng>?) -> Unit
-) {
-    val apiKey = getString(context, R.string.google_directions_api)
+    var distance: Double = 0.0
+    var duration: Double = 0.0
 
-    val (origin, destination) = markers.run { first() to last() }
+    fun getDirections(
+        markers: List<LatLng>,
+        callback: (List<LatLng>?) -> Unit
+    ) {
+        if (!isNetworkAvailable(context)) callback(null)
 
-    val waypointsString = markers
-        .drop(1)
-        .dropLast(1)
-        .takeIf { it.isNotEmpty() }
-        ?.joinToString("|") { "${it.latitude},${it.longitude}" }
+        val originString = "${markers.first().latitude},${markers.first().longitude}"
+        val destinationString = "${markers.last().latitude},${markers.last().longitude}"
+        val waypointsString = markers
+            .drop(1)
+            .dropLast(1)
+            .takeIf { it.isNotEmpty() }
+            ?.joinToString("|") { "${it.latitude},${it.longitude}" }
 
-    val originString = "${origin.latitude},${origin.longitude}"
-    val destinationString = "${destination.latitude},${destination.longitude}"
+        val call = RetrofitClient.apiService.getDirections(
+            origin = originString,
+            destination = destinationString,
+            waypoints = waypointsString,
+            apiKey = apiKey
+        )
 
-    val call = RetrofitClient.apiService.getDirections(
-        origin = originString,
-        destination = destinationString,
-        waypoints = waypointsString,
-        apiKey = apiKey
-    )
+        call.enqueue(object : Callback<DirectionsJson> {
+            override fun onResponse(
+                call: Call<DirectionsJson>,
+                response: Response<DirectionsJson>
+            ) {
+                if (response.isSuccessful) {
+                    val directionsResponse = response.body()
+                    if (directionsResponse != null && directionsResponse.status == "OK") {
+                        val polylinePoints =
+                            PolyUtil.decode(directionsResponse.routes[0].overview_polyline.points)
 
-    call.enqueue(object : Callback<DirectionsJson> {
-        override fun onResponse(call: Call<DirectionsJson>, response: Response<DirectionsJson>) {
-            if (response.isSuccessful) {
-                val directionsResponse = response.body()
-                if (directionsResponse != null && directionsResponse.status == "OK") {
-                    val polylinePoints =
-                        PolyUtil.decode(directionsResponse.routes[0].overview_polyline.points)
-                    callback(polylinePoints)
+                        //Dodadac nogi do siebie
+
+                        callback(polylinePoints)
+                    } else {
+                        callback(null)
+                    }
                 } else {
                     callback(null)
                 }
-            } else {
+            }
+
+            override fun onFailure(call: Call<DirectionsJson>, t: Throwable) {
                 callback(null)
             }
-        }
-
-        override fun onFailure(call: Call<DirectionsJson>, t: Throwable) {
-            callback(null)
-        }
-    })
+        })
+    }
 }
