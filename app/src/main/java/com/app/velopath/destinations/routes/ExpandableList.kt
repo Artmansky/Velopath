@@ -26,7 +26,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -53,7 +53,6 @@ data class RouteItem(
     val id: String,
     val navigationLink: String,
     val overviewPolyline: String,
-    var likeCount: Int,
     val isExpanded: Boolean = false
 )
 
@@ -64,7 +63,6 @@ val routeItems = listOf(
         id = "1",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
         overviewPolyline = "abcd1234xyz",
-        likeCount = 10
     ),
     RouteItem(
         title = "Take me here when you can",
@@ -72,7 +70,6 @@ val routeItems = listOf(
         id = "2",
         navigationLink = "/advanced-compose",
         overviewPolyline = "efgh5678uvw",
-        likeCount = 25
     ),
     RouteItem(
         title = "My new route",
@@ -80,7 +77,6 @@ val routeItems = listOf(
         id = "3",
         navigationLink = "/understanding-coroutines",
         overviewPolyline = "ijkl91011rst",
-        likeCount = 5
     ),
     RouteItem(
         title = "Road near the park",
@@ -88,7 +84,6 @@ val routeItems = listOf(
         id = "4",
         navigationLink = "/state-management",
         overviewPolyline = "mnop121314abc",
-        likeCount = 12
     ),
     RouteItem(
         title = "100km's in one drive",
@@ -96,7 +91,6 @@ val routeItems = listOf(
         id = "5",
         navigationLink = "/navigation-in-compose",
         overviewPolyline = "qrst151617xyz",
-        likeCount = 50
     )
 )
 
@@ -170,23 +164,16 @@ fun ExpandedItem(
                 )
                 if (!isAuthor) {
                     Icon(
-                        imageVector = Icons.Outlined.Star,
-                        contentDescription = "Like",
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = "Like Status",
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .clickable {
-                                //Zaimplementowac Clicka
-                                item.likeCount++
+                                //Zaimplementowac Clicka do bazy
                             }
                     )
                 }
-                Text(
-                    text = "${item.likeCount} like(s)",
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.width(5.dp))
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = if (isExpanded) "Collapse" else "Expand",
