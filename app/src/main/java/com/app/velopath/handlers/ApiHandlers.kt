@@ -13,9 +13,19 @@ import retrofit2.Response
 
 class ApiHandlers(private val context: Context) {
     private val apiKey = getString(context, R.string.google_directions_api)
+    private val baseUrl = "https://www.google.com/maps/dir/?api=1"
 
     var distance: Double = 0.0
     var duration: Int = 0
+    var overviewPolyline: String = ""
+    var navigationLink: String = ""
+
+    fun clearValues() {
+        distance = 0.0
+        duration = 0
+        overviewPolyline = ""
+        navigationLink = ""
+    }
 
     fun getDirections(
         markers: List<LatLng>,
@@ -59,6 +69,14 @@ class ApiHandlers(private val context: Context) {
 
                         distance = tempDistance / 1000.0
                         duration = tempDuration / 60
+                        overviewPolyline = directionsResponse.routes[0].overview_polyline.points
+
+                        navigationLink = buildString {
+                            append("$baseUrl&origin=$originString&destination=$destinationString&mode=bicycling&avoid=highways")
+                            if (waypointsString != null) {
+                                append("&waypoints=$waypointsString")
+                            }
+                        }
 
                         callback(polylinePoints)
                     } else {

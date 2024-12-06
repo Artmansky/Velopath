@@ -52,6 +52,8 @@ data class RouteItem(
     val author: String,
     val id: String,
     val navigationLink: String,
+    val overviewPolyline: String,
+    var likeCount: Int,
     val isExpanded: Boolean = false
 )
 
@@ -60,31 +62,41 @@ val routeItems = listOf(
         title = "Road near the lake",
         author = "John Doe",
         id = "1",
-        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal"
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
+        overviewPolyline = "abcd1234xyz",
+        likeCount = 10
     ),
     RouteItem(
-        title = "take me here when you can",
+        title = "Take me here when you can",
         author = "Jane Smith",
         id = "2",
-        navigationLink = "/advanced-compose"
+        navigationLink = "/advanced-compose",
+        overviewPolyline = "efgh5678uvw",
+        likeCount = 25
     ),
     RouteItem(
         title = "My new route",
         author = "Alice Johnson",
         id = "3",
-        navigationLink = "/understanding-coroutines"
+        navigationLink = "/understanding-coroutines",
+        overviewPolyline = "ijkl91011rst",
+        likeCount = 5
     ),
     RouteItem(
         title = "Road near the park",
         author = "Robert Brown",
         id = "4",
-        navigationLink = "/state-management"
+        navigationLink = "/state-management",
+        overviewPolyline = "mnop121314abc",
+        likeCount = 12
     ),
     RouteItem(
         title = "100km's in one drive",
         author = "Emily Davis",
         id = "5",
-        navigationLink = "/navigation-in-compose"
+        navigationLink = "/navigation-in-compose",
+        overviewPolyline = "qrst151617xyz",
+        likeCount = 50
     )
 )
 
@@ -163,10 +175,18 @@ fun ExpandedItem(
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .clickable {
-                                //Zaimplementowac onclicka
+                                //Zaimplementowac Clicka
+                                item.likeCount++
                             }
                     )
                 }
+                Text(
+                    text = "${item.likeCount} like(s)",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = if (isExpanded) "Collapse" else "Expand",
