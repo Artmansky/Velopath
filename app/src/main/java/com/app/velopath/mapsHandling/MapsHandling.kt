@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,10 +21,14 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -124,6 +129,7 @@ class MapsHandling(private val context: Context) {
                 )
             }
 
+        val isDialogVisible = remember { mutableStateOf(false) }
         val isMarkingEnabled = remember { mutableStateOf(false) }
         val markers = remember { mutableStateListOf<LatLng>() }
         val isMapLoaded = remember { mutableStateOf(false) }
@@ -183,6 +189,10 @@ class MapsHandling(private val context: Context) {
                                 )
                             }
                         }
+                    }
+
+                    if (isDialogVisible.value) {
+                        ShowNameDialog(isDialogVisible)
                     }
                 }
                 if (!isMapLoaded.value) {
@@ -292,7 +302,7 @@ class MapsHandling(private val context: Context) {
                     ) {
                         Button(
                             onClick = {
-
+                                isDialogVisible.value = true
 
                             },
                             modifier = Modifier
@@ -366,6 +376,52 @@ class MapsHandling(private val context: Context) {
                 }
             } else {
                 polylines.value = null
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun ShowNameDialog(isVisible: MutableState<Boolean>) {
+        var inputText by remember { mutableStateOf("") }
+
+        ModalBottomSheet(
+            onDismissRequest = { isVisible.value = false }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Name your new Route!",
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    value = inputText,
+                    onValueChange = { inputText = it },
+                    label = { Text("Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextButton(onClick = { isVisible.value = false }) {
+                        Text("Cancel")
+                    }
+                    TextButton(onClick = {
+                        // Tu dodaj wysłanie do bazy
+                        isVisible.value = false
+                    }) {
+                        Text("Add")
+                    }
+                }
             }
         }
     }
