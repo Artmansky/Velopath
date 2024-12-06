@@ -129,7 +129,8 @@ class MapsHandling(private val context: Context) {
                 )
             }
 
-        val isDialogVisible = remember { mutableStateOf(false) }
+        val isDiscoverVisible = remember { mutableStateOf(false) }
+        val isAddDialogVisible = remember { mutableStateOf(false) }
         val isMarkingEnabled = remember { mutableStateOf(false) }
         val markers = remember { mutableStateListOf<LatLng>() }
         val isMapLoaded = remember { mutableStateOf(false) }
@@ -191,8 +192,32 @@ class MapsHandling(private val context: Context) {
                         }
                     }
 
-                    if (isDialogVisible.value) {
-                        ShowNameDialog(isDialogVisible)
+                    if (isAddDialogVisible.value) {
+                        ShowNameDialog(isAddDialogVisible)
+                    }
+
+                    if (isDiscoverVisible.value) {
+                        if (hasPermission) {
+                            val pair = getCurrentLocation(context)
+                            if (pair != null) {
+                                ShowDiscoverDialog(
+                                    isDiscoverVisible,
+                                    LatLng(pair.first, pair.second)
+                                )
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "User's location unknown",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "User's location unknown",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
                 if (!isMapLoaded.value) {
@@ -289,7 +314,9 @@ class MapsHandling(private val context: Context) {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Button(
-                        onClick = { },
+                        onClick = {
+                            isDiscoverVisible.value = true
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(60.dp)
@@ -302,8 +329,7 @@ class MapsHandling(private val context: Context) {
                     ) {
                         Button(
                             onClick = {
-                                isDialogVisible.value = true
-
+                                isAddDialogVisible.value = true
                             },
                             modifier = Modifier
                                 .weight(1f)
@@ -422,6 +448,16 @@ class MapsHandling(private val context: Context) {
                     }
                 }
             }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun ShowDiscoverDialog(isVisible: MutableState<Boolean>, latLang: LatLng) {
+        ModalBottomSheet(
+            onDismissRequest = { isVisible.value = false }
+        ) {
+
         }
     }
 }
