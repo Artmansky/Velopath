@@ -15,7 +15,7 @@ class ApiHandlers(private val context: Context) {
     private val apiKey = getString(context, R.string.google_directions_api)
 
     var distance: Double = 0.0
-    var duration: Double = 0.0
+    var duration: Int = 0
 
     fun getDirections(
         markers: List<LatLng>,
@@ -49,7 +49,16 @@ class ApiHandlers(private val context: Context) {
                         val polylinePoints =
                             PolyUtil.decode(directionsResponse.routes[0].overview_polyline.points)
 
-                        //Dodadac nogi do siebie
+                        var tempDistance = 0
+                        var tempDuration = 0
+
+                        for (leg in directionsResponse.routes[0].legs) {
+                            tempDuration += leg.duration.value
+                            tempDistance += leg.distance.value
+                        }
+
+                        distance = tempDistance / 1000.0
+                        duration = tempDuration / 60
 
                         callback(polylinePoints)
                     } else {

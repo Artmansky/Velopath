@@ -2,6 +2,7 @@ package com.app.velopath.mapsHandling
 
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -416,7 +417,8 @@ class MapsHandling(private val context: Context) {
                         Text("Cancel")
                     }
                     TextButton(onClick = {
-                        // Tu dodaj wysłanie do bazy
+                        Log.i("Distance", apiHandler.distance.toString())
+                        Log.i("Duration", apiHandler.duration.toString())
                         isVisible.value = false
                     }) {
                         Text("Add")
