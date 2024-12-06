@@ -1,4 +1,4 @@
-package com.app.velopath
+package com.app.velopath.database
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.firestoreSettings

@@ -42,19 +42,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.velopath.R
+import com.app.velopath.database.RouteItem
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 
-data class RouteItem(
-    val title: String,
-    val author: String,
-    val id: String,
-    val navigationLink: String,
-    val overviewPolyline: String,
-    val isExpanded: Boolean = false
-)
 
 val routeItems = listOf(
     RouteItem(
@@ -62,34 +55,54 @@ val routeItems = listOf(
         author = "John Doe",
         id = "1",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
+        startLang = 43.65107,
+        startLong = -79.347015,
+        endLang = 45.50169,
+        endLong = -73.567253,
         overviewPolyline = "abcd1234xyz",
     ),
     RouteItem(
         title = "Take me here when you can",
         author = "Jane Smith",
         id = "2",
-        navigationLink = "/advanced-compose",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Vancouver&destination=Seattle",
+        startLang = 49.28273,
+        startLong = -123.120735,
+        endLang = 47.606209,
+        endLong = -122.332069,
         overviewPolyline = "efgh5678uvw",
     ),
     RouteItem(
         title = "My new route",
         author = "Alice Johnson",
         id = "3",
-        navigationLink = "/understanding-coroutines",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=San+Francisco&destination=Los+Angeles",
+        startLang = 37.774929,
+        startLong = -122.419418,
+        endLang = 34.052235,
+        endLong = -118.243683,
         overviewPolyline = "ijkl91011rst",
     ),
     RouteItem(
         title = "Road near the park",
         author = "Robert Brown",
         id = "4",
-        navigationLink = "/state-management",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Berlin&destination=Munich",
+        startLang = 52.520008,
+        startLong = 13.404954,
+        endLang = 48.135124,
+        endLong = 11.581981,
         overviewPolyline = "mnop121314abc",
     ),
     RouteItem(
         title = "100km's in one drive",
         author = "Emily Davis",
         id = "5",
-        navigationLink = "/navigation-in-compose",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=London&destination=Brighton",
+        startLang = 51.507351,
+        startLong = -0.127758,
+        endLang = 50.82253,
+        endLong = -0.137163,
         overviewPolyline = "qrst151617xyz",
     )
 )
