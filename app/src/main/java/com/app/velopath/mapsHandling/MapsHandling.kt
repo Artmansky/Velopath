@@ -40,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.app.velopath.R
 import com.app.velopath.destinations.routes.routeItems
@@ -136,8 +137,11 @@ class MapsHandling(private val context: Context) {
         val isMarkingEnabled = remember { mutableStateOf(false) }
         val isExtraButtonsVisible = remember { mutableStateOf(false) }
         val isMapLoaded = remember { mutableStateOf(false) }
+
         val markers = remember { mutableStateListOf<LatLng>() }
+        val showMarkers = remember { mutableStateListOf<LatLng>() }
         val polylines = remember { mutableStateOf<List<LatLng>?>(null) }
+        val showPolylines = remember { mutableStateOf<List<LatLng>?>(null) }
 
         Column(modifier = modifier.fillMaxSize()) {
             Box(
@@ -181,6 +185,12 @@ class MapsHandling(private val context: Context) {
                         )
                     }
 
+                    showMarkers.forEach { latLng ->
+                        Marker(
+                            state = MarkerState(position = latLng)
+                        )
+                    }
+
                     polylines.value?.let { polylineList ->
                         if (polylineList.size > 1) {
                             for (i in 0 until polylineList.size - 1) {
@@ -189,6 +199,20 @@ class MapsHandling(private val context: Context) {
                                 Polyline(
                                     points = listOf(point1, point2),
                                     color = MaterialTheme.colorScheme.primary,
+                                    width = 10f
+                                )
+                            }
+                        }
+                    }
+
+                    showPolylines.value?.let { polylineList ->
+                        if (polylineList.size > 1) {
+                            for (i in 0 until polylineList.size - 1) {
+                                val point1 = polylineList[i]
+                                val point2 = polylineList[i + 1]
+                                Polyline(
+                                    points = listOf(point1, point2),
+                                    color = Color.Red,
                                     width = 10f
                                 )
                             }
@@ -315,6 +339,8 @@ class MapsHandling(private val context: Context) {
                     ) {
                         FloatingActionButton(
                             onClick = {
+                                showMarkers.clear()
+                                showPolylines.value = null
                                 isExtraButtonsVisible.value = false
                             }
                         ) {
