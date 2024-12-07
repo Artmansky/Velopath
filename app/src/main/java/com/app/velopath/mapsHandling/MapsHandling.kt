@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.velopath.R
+import com.app.velopath.destinations.routes.routeItems
 import com.app.velopath.handlers.ApiHandlers
 import com.app.velopath.handlers.getCurrentLocation
 import com.app.velopath.handlers.isLocationPermissionGranted
@@ -132,8 +134,9 @@ class MapsHandling(private val context: Context) {
         val isDiscoverVisible = remember { mutableStateOf(false) }
         val isAddDialogVisible = remember { mutableStateOf(false) }
         val isMarkingEnabled = remember { mutableStateOf(false) }
-        val markers = remember { mutableStateListOf<LatLng>() }
+        val isExtraButtonsVisible = remember { mutableStateOf(false) }
         val isMapLoaded = remember { mutableStateOf(false) }
+        val markers = remember { mutableStateListOf<LatLng>() }
         val polylines = remember { mutableStateOf<List<LatLng>?>(null) }
 
         Column(modifier = modifier.fillMaxSize()) {
@@ -202,6 +205,7 @@ class MapsHandling(private val context: Context) {
                             if (pair != null) {
                                 ShowDiscoverDialog(
                                     isDiscoverVisible,
+                                    isExtraButtonsVisible,
                                     LatLng(pair.first, pair.second)
                                 )
                             } else {
@@ -300,6 +304,41 @@ class MapsHandling(private val context: Context) {
                             contentDescription = "Follow Location",
                             modifier = modifier.size(32.dp)
                         )
+                    }
+                }
+
+                if (isExtraButtonsVisible.value) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(16.dp)
+                    ) {
+                        FloatingActionButton(
+                            onClick = {
+                                isExtraButtonsVisible.value = false
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(16.dp)
+                            .padding(start = 64.dp)
+                    ) {
+                        FloatingActionButton(
+                            onClick = {
+
+
+                            }
+                        ) {
+                            Text("Ride!")
+                        }
                     }
                 }
             }
@@ -453,11 +492,15 @@ class MapsHandling(private val context: Context) {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun ShowDiscoverDialog(isVisible: MutableState<Boolean>, latLang: LatLng) {
+    private fun ShowDiscoverDialog(
+        isVisible: MutableState<Boolean>,
+        controlsVisible: MutableState<Boolean>,
+        latLang: LatLng
+    ) {
         ModalBottomSheet(
             onDismissRequest = { isVisible.value = false }
         ) {
-
+            DirectionsList(routeItems, controlsVisible, context)
         }
     }
 }

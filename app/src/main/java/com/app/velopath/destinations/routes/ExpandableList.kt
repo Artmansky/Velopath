@@ -12,10 +12,12 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -59,6 +61,8 @@ val routeItems = listOf(
         startLong = -79.347015,
         endLang = 45.50169,
         endLong = -73.567253,
+        distance = 540.0,
+        duration = 320,
         overviewPolyline = "abcd1234xyz",
     ),
     RouteItem(
@@ -70,6 +74,8 @@ val routeItems = listOf(
         startLong = -123.120735,
         endLang = 47.606209,
         endLong = -122.332069,
+        distance = 229.0,
+        duration = 150,
         overviewPolyline = "efgh5678uvw",
     ),
     RouteItem(
@@ -81,6 +87,8 @@ val routeItems = listOf(
         startLong = -122.419418,
         endLang = 34.052235,
         endLong = -118.243683,
+        distance = 610.0,
+        duration = 380,
         overviewPolyline = "ijkl91011rst",
     ),
     RouteItem(
@@ -92,6 +100,8 @@ val routeItems = listOf(
         startLong = 13.404954,
         endLang = 48.135124,
         endLong = 11.581981,
+        distance = 590.0,
+        duration = 360,
         overviewPolyline = "mnop121314abc",
     ),
     RouteItem(
@@ -103,41 +113,187 @@ val routeItems = listOf(
         startLong = -0.127758,
         endLang = 50.82253,
         endLong = -0.137163,
+        distance = 86.0,
+        duration = 90,
+        overviewPolyline = "qrst151617xyz",
+    ),
+    RouteItem(
+        title = "Road near the lake",
+        author = "John Doe",
+        id = "1",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
+        startLang = 43.65107,
+        startLong = -79.347015,
+        endLang = 45.50169,
+        endLong = -73.567253,
+        distance = 540.0,
+        duration = 320,
+        overviewPolyline = "abcd1234xyz",
+    ),
+    RouteItem(
+        title = "Take me here when you can",
+        author = "Jane Smith",
+        id = "2",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Vancouver&destination=Seattle",
+        startLang = 49.28273,
+        startLong = -123.120735,
+        endLang = 47.606209,
+        endLong = -122.332069,
+        distance = 229.0,
+        duration = 150,
+        overviewPolyline = "efgh5678uvw",
+    ),
+    RouteItem(
+        title = "My new route",
+        author = "Alice Johnson",
+        id = "3",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=San+Francisco&destination=Los+Angeles",
+        startLang = 37.774929,
+        startLong = -122.419418,
+        endLang = 34.052235,
+        endLong = -118.243683,
+        distance = 610.0,
+        duration = 380,
+        overviewPolyline = "ijkl91011rst",
+    ),
+    RouteItem(
+        title = "Road near the park",
+        author = "Robert Brown",
+        id = "4",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Berlin&destination=Munich",
+        startLang = 52.520008,
+        startLong = 13.404954,
+        endLang = 48.135124,
+        endLong = 11.581981,
+        distance = 590.0,
+        duration = 360,
+        overviewPolyline = "mnop121314abc",
+    ),
+    RouteItem(
+        title = "100km's in one drive",
+        author = "Emily Davis",
+        id = "5",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=London&destination=Brighton",
+        startLang = 51.507351,
+        startLong = -0.127758,
+        endLang = 50.82253,
+        endLong = -0.137163,
+        distance = 86.0,
+        duration = 90,
+        overviewPolyline = "qrst151617xyz",
+    ),
+    RouteItem(
+        title = "Road near the lake",
+        author = "John Doe",
+        id = "1",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
+        startLang = 43.65107,
+        startLong = -79.347015,
+        endLang = 45.50169,
+        endLong = -73.567253,
+        distance = 540.0,
+        duration = 320,
+        overviewPolyline = "abcd1234xyz",
+    ),
+    RouteItem(
+        title = "Take me here when you can",
+        author = "Jane Smith",
+        id = "2",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Vancouver&destination=Seattle",
+        startLang = 49.28273,
+        startLong = -123.120735,
+        endLang = 47.606209,
+        endLong = -122.332069,
+        distance = 229.0,
+        duration = 150,
+        overviewPolyline = "efgh5678uvw",
+    ),
+    RouteItem(
+        title = "My new route",
+        author = "Alice Johnson",
+        id = "3",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=San+Francisco&destination=Los+Angeles",
+        startLang = 37.774929,
+        startLong = -122.419418,
+        endLang = 34.052235,
+        endLong = -118.243683,
+        distance = 610.0,
+        duration = 380,
+        overviewPolyline = "ijkl91011rst",
+    ),
+    RouteItem(
+        title = "Road near the park",
+        author = "Robert Brown",
+        id = "4",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Berlin&destination=Munich",
+        startLang = 52.520008,
+        startLong = 13.404954,
+        endLang = 48.135124,
+        endLong = 11.581981,
+        distance = 590.0,
+        duration = 360,
+        overviewPolyline = "mnop121314abc",
+    ),
+    RouteItem(
+        title = "100km's in one drive",
+        author = "Emily Davis",
+        id = "5",
+        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=London&destination=Brighton",
+        startLang = 51.507351,
+        startLong = -0.127758,
+        endLang = 50.82253,
+        endLong = -0.137163,
+        distance = 86.0,
+        duration = 90,
         overviewPolyline = "qrst151617xyz",
     )
 )
 
 @Composable
 fun AnimatedExpandableList(itemsDisplay: List<RouteItem>, isDarkMode: Boolean, context: Context) {
-    val isAuthor = false
-    val expandedItems = remember {
-        mutableStateListOf(*BooleanArray(itemsDisplay.size) { false }.toTypedArray())
-    }
-    val listState = rememberLazyListState()
-
-    val mapStyleOptions = remember {
-        if (isDarkMode) {
-            MapStyleOptions.loadRawResourceStyle(context, R.raw.dark_map)
-        } else {
-            null
-        }
-    }
-
-    LazyColumn(
-        modifier = Modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
-        state = listState
-    ) {
-        itemsIndexed(itemsDisplay, key = { index, _ -> index }) { index, item ->
-            ExpandedItem(
-                context = context,
-                mapStyleOptions = mapStyleOptions,
-                item = item,
-                isExpanded = expandedItems[index],
-                isAuthor = isAuthor,
-                onExpandedChange = { expandedItems[index] = it }
+    if (itemsDisplay.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "No results found",
+                style = MaterialTheme.typography.bodyLarge,
             )
+        }
+    } else {
+        val isAuthor = true
+        val expandedItems = remember {
+            mutableStateListOf(*BooleanArray(itemsDisplay.size) { false }.toTypedArray())
+        }
+        val listState = rememberLazyListState()
+
+        val mapStyleOptions = remember {
+            if (isDarkMode) {
+                MapStyleOptions.loadRawResourceStyle(context, R.raw.dark_map)
+            } else {
+                null
+            }
+        }
+
+        LazyColumn(
+            modifier = Modifier,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
+            state = listState
+        ) {
+            itemsIndexed(itemsDisplay, key = { index, _ -> index }) { index, item ->
+                ExpandedItem(
+                    context = context,
+                    mapStyleOptions = mapStyleOptions,
+                    item = item,
+                    isExpanded = expandedItems[index],
+                    isAuthor = isAuthor,
+                    onExpandedChange = { expandedItems[index] = it }
+                )
+            }
         }
     }
 }
@@ -232,24 +388,32 @@ fun ExpandedItem(
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Button(onClick = {
-                            val mapIntent = Intent(
-                                Intent.ACTION_VIEW, Uri.parse(item.navigationLink)
-                            )
-                            mapIntent.setPackage("com.google.android.apps.maps")
-
-                            context.startActivity(mapIntent)
-                        }) {
-                            Text("Ride")
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        if (isAuthor) {
-                            Button(
-                                onClick = {},
-                            ) {
-                                Text("Delete")
+                        Text(
+                            text = "Distance: ${item.distance} km(s)\r\nDuration: ${item.duration} min(s)",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(onClick = {
+                                val mapIntent = Intent(
+                                    Intent.ACTION_VIEW, Uri.parse(item.navigationLink)
+                                )
+                                mapIntent.setPackage("com.google.android.apps.maps")
+                                context.startActivity(mapIntent)
+                            }) {
+                                Text("Ride")
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            if (isAuthor) {
+                                Button(onClick = {}) {
+                                    Text("Delete")
+                                }
                             }
                         }
                     }

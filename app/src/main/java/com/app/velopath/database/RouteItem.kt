@@ -9,6 +9,8 @@ data class RouteItem(
     val startLong: Double,
     val endLang: Double,
     val endLong: Double,
+    val distance: Double,
+    val duration: Int,
     val overviewPolyline: String,
     val isExpanded: Boolean = false
 )
