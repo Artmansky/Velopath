@@ -396,7 +396,15 @@ class MapsHandling(private val context: Context) {
                     ) {
                         Button(
                             onClick = {
-                                isAddDialogVisible.value = true
+                                if (markers.count() > 1) {
+                                    isAddDialogVisible.value = true
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Add more markers to the map!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             },
                             modifier = Modifier
                                 .weight(1f)
