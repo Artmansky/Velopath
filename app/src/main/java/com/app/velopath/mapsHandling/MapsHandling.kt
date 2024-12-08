@@ -230,7 +230,9 @@ class MapsHandling(private val context: Context) {
                                 ShowDiscoverDialog(
                                     isDiscoverVisible,
                                     isExtraButtonsVisible,
-                                    LatLng(pair.first, pair.second)
+                                    showMarkers,
+                                    showPolylines,
+                                    LatLng(pair.first, pair.second),
                                 )
                             } else {
                                 Toast.makeText(
@@ -521,12 +523,14 @@ class MapsHandling(private val context: Context) {
     private fun ShowDiscoverDialog(
         isVisible: MutableState<Boolean>,
         controlsVisible: MutableState<Boolean>,
+        showMarkers: MutableList<LatLng>,
+        showPolylines: MutableState<List<LatLng>?>,
         latLang: LatLng
     ) {
         ModalBottomSheet(
             onDismissRequest = { isVisible.value = false }
         ) {
-            DirectionsList(routeItems, controlsVisible, context)
+            DirectionsList(routeItems, controlsVisible, showMarkers, showPolylines, context)
         }
     }
 }

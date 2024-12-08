@@ -33,12 +33,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.velopath.database.RouteItem
+import com.google.android.gms.maps.model.LatLng
 
 
 @Composable
 fun DirectionsList(
     itemsDisplay: List<RouteItem>,
     controlsVisible: MutableState<Boolean>,
+    showMarkers: MutableList<LatLng>,
+    showPolylines: MutableState<List<LatLng>?>,
     context: Context
 ) {
     if (itemsDisplay.isEmpty()) {
@@ -67,7 +70,9 @@ fun DirectionsList(
                     context = context,
                     isAuthor = false,
                     controlsVisible = controlsVisible,
-                    item = item
+                    item = item,
+                    showMarkers = showMarkers,
+                    showPolylines = showPolylines
                 )
             }
         }
@@ -80,6 +85,8 @@ fun DirectionItem(
     context: Context,
     isAuthor: Boolean,
     controlsVisible: MutableState<Boolean>,
+    showMarkers: MutableList<LatLng>,
+    showPolylines: MutableState<List<LatLng>?>,
     item: RouteItem
 ) {
     Surface(
@@ -135,6 +142,8 @@ fun DirectionItem(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
+                        showMarkers.clear()
+                        showPolylines.value = null
                         controlsVisible.value = true
                     }
                     ) {
