@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
@@ -77,15 +78,15 @@ fun InformationPage() {
         )
 
         Spacer(modifier = Modifier.size(8.dp))
-        
+
         Text(
-            text = context.getString(R.string.app_name),
+            text = getString(context, R.string.app_name),
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 24.sp),
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
         Text(
-            text = "Version: $versionName",
+            text = getString(context, R.string.version) + versionName,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(bottom = 16.dp)
         )
@@ -105,7 +106,7 @@ fun InformationPage() {
                 context.startActivity(urlIntent)
             }
         ) {
-            Text(text = "Github Page")
+            Text(text = getString(context, R.string.github_page))
         }
     }
 }

@@ -282,6 +282,7 @@ fun MainNavigation(
                     gestures.value = true
                     PrintFeedback(
                         title = items[selectedItemIndex].title,
+                        context = context,
                         onClick = {
                             scope.launch { drawerState.open() }
                         },

@@ -3,4 +3,18 @@
     <string name="app_logo">App logo</string>
     <string name="feedback_info">Give us information about possible updates or bugs You found</string>
     <string name="app_info_message">Hi, (Thomas) author here. This app is my engineering project for Silesian University of Technology. Project aims to deliver tool with multiple roads to cycle around. Built using Jetpack Compose and with support for Material Design 3.</string>
+    <string name="no_results">"No results found"</string>
+    <string name="route_display">"Route display:"</string>
+    <string name="distance_duration">Distance: %1$s km(s)\nDuration: %2$s min(s)</string>
+    <string name="ride">Ride</string>
+    <string name="delete">Delete</string>
+    <string name="name">Name</string>
+    <string name="send">Send</string>
+    <string name="version">Version:</string>
+    <string name="feedback">Feedback</string>
+    <string name="message">Message</string>
+    <string name="message_name_empty">"Message and name can't be empty"</string>
+    <string name="network_error">"Network error. Check connection"</string>
+    <string name="feedback_sent">Feedback sent!</string>
+    <string name="github_page">"Github Page"</string>
 </resources>

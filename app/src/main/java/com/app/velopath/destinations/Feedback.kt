@@ -21,8 +21,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
@@ -34,6 +34,7 @@ object Feedback
 fun PrintFeedback(
     modifier: Modifier = Modifier,
     title: String,
+    context: Context,
     onClick: () -> Unit,
     onFeedbackClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit,
     networkAvailable: (context: Context) -> Boolean
@@ -51,7 +52,7 @@ fun PrintFeedback(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            FeedbackPage(onFeedbackClick, networkAvailable)
+            FeedbackPage(onFeedbackClick, networkAvailable, context)
         }
     }
 }
@@ -59,11 +60,11 @@ fun PrintFeedback(
 @Composable
 fun FeedbackPage(
     onClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit,
-    networkAvailable: (context: Context) -> Boolean
+    networkAvailable: (context: Context) -> Boolean,
+    context: Context
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var message by rememberSaveable { mutableStateOf("") }
-    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -73,7 +74,7 @@ fun FeedbackPage(
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Feedback",
+            text = getString(context, R.string.feedback),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 24.dp)
         )
@@ -87,7 +88,7 @@ fun FeedbackPage(
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Name") },
+            label = { Text(getString(context, R.string.name)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
@@ -96,7 +97,7 @@ fun FeedbackPage(
         OutlinedTextField(
             value = message,
             onValueChange = { message = it },
-            label = { Text("Message") },
+            label = { Text(getString(context, R.string.message)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
@@ -110,7 +111,7 @@ fun FeedbackPage(
                     name.isEmpty() || message.isEmpty() -> {
                         Toast.makeText(
                             context,
-                            "Message and name can't be empty",
+                            getString(context, R.string.message_name_empty),
                             Toast.LENGTH_SHORT
                         )
                             .show()
@@ -119,7 +120,7 @@ fun FeedbackPage(
                     !networkAvailable(context) -> {
                         Toast.makeText(
                             context,
-                            "Network error. Check connection",
+                            getString(context, R.string.network_error),
                             Toast.LENGTH_SHORT
                         )
                             .show()
@@ -127,7 +128,11 @@ fun FeedbackPage(
 
                     else -> {
                         onClick(message, name) {
-                            Toast.makeText(context, "Feedback sent!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                getString(context, R.string.feedback_sent),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
                         name = ""
@@ -137,7 +142,7 @@ fun FeedbackPage(
             },
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            Text(text = "Send")
+            Text(text = getString(context, R.string.send))
         }
     }
 }

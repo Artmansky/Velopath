@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import com.app.velopath.database.RouteItem
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -259,7 +260,7 @@ fun AnimatedExpandableList(itemsDisplay: List<RouteItem>, isDarkMode: Boolean, c
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "No results found",
+                text = getString(context, R.string.no_results),
                 style = MaterialTheme.typography.bodyLarge,
             )
         }
@@ -360,7 +361,7 @@ fun ExpandedItem(
                         .padding(top = 12.dp)
                 ) {
                     Text(
-                        text = "Route display:",
+                        text = getString(context, R.string.route_display),
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -392,7 +393,11 @@ fun ExpandedItem(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Distance: ${item.distance} km(s)\r\nDuration: ${item.duration} min(s)",
+                            text = String.format(
+                                getString(context, R.string.distance_duration),
+                                item.distance,
+                                item.duration
+                            ),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         Row(
@@ -407,12 +412,12 @@ fun ExpandedItem(
                                 mapIntent.setPackage("com.google.android.apps.maps")
                                 context.startActivity(mapIntent)
                             }) {
-                                Text("Ride")
+                                Text(getString(context, R.string.ride))
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             if (isAuthor) {
                                 Button(onClick = {}) {
-                                    Text("Delete")
+                                    Text(getString(context, R.string.delete))
                                 }
                             }
                         }
