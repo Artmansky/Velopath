@@ -17,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getString
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -143,7 +144,7 @@ fun MainNavigation(
                         }
                     }
                 },
-                userName = user?.displayName ?: "Nickname"
+                userName = user?.displayName ?: getString(context, R.string.nickname)
             )
         },
         drawerState = drawerState,
@@ -189,7 +190,7 @@ fun MainNavigation(
                                         )
                                     Toast.makeText(
                                         context,
-                                        "Logging You in, please wait",
+                                        getString(context, R.string.logging_in),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     viewModel.auth.signInWithCredential(firebaseCredential)
@@ -202,13 +203,14 @@ fun MainNavigation(
                                 } catch (e: Exception) {
                                     Toast.makeText(
                                         context,
-                                        "Error: ${e.message}",
+                                        getString(context, R.string.error) + e.message,
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
                             }
                         },
-                        darkTheme = isDarkTheme
+                        darkTheme = isDarkTheme,
+                        context = context
                     )
                 }
                 composable<Home> {

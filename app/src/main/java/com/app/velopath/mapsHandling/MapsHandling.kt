@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import com.app.velopath.destinations.routes.routeItems
 import com.app.velopath.handlers.ApiHandlers
@@ -155,24 +156,25 @@ class MapsHandling(private val context: Context) {
                     uiSettings = uiSettings,
                     cameraPositionState = cameraPositionState,
                     onMapClick = { latLng ->
-                        placeMarker(latLng, isMarkingEnabled, markers, polylines)
+                        placeMarker(latLng, isMarkingEnabled, markers, polylines, context)
                     },
                     onPOIClick = { latLng ->
-                        placeMarker(latLng.latLng, isMarkingEnabled, markers, polylines)
+                        placeMarker(latLng.latLng, isMarkingEnabled, markers, polylines, context)
                     },
                     onMyLocationClick = { latLng ->
                         placeMarker(
                             LatLng(latLng.latitude, latLng.longitude),
                             isMarkingEnabled,
                             markers,
-                            polylines
+                            polylines,
+                            context
                         )
                     },
                     onMapLoaded = {
                         if (!isNetworkAvailable(context)) {
                             Toast.makeText(
                                 context,
-                                "Map may not load. Check Internet",
+                                getString(context, R.string.check_internet),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -220,7 +222,7 @@ class MapsHandling(private val context: Context) {
                     }
 
                     if (isAddDialogVisible.value) {
-                        ShowNameDialog(isAddDialogVisible)
+                        ShowNameDialog(isAddDialogVisible, context)
                     }
 
                     if (isDiscoverVisible.value) {
@@ -237,14 +239,14 @@ class MapsHandling(private val context: Context) {
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "User's location unknown",
+                                    getString(context, R.string.location_unknown),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                         } else {
                             Toast.makeText(
                                 context,
-                                "User's location unknown",
+                                getString(context, R.string.location_unknown),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -319,7 +321,7 @@ class MapsHandling(private val context: Context) {
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "User's location unknown",
+                                    getString(context, R.string.location_unknown),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -365,7 +367,7 @@ class MapsHandling(private val context: Context) {
 
                             }
                         ) {
-                            Text("Ride!")
+                            Text(text = getString(context, R.string.ride))
                         }
                     }
                 }
@@ -388,7 +390,7 @@ class MapsHandling(private val context: Context) {
                             .fillMaxWidth()
                             .height(60.dp)
                     ) {
-                        Text(text = "Discover nearby routes")
+                        Text(text = getString(context, R.string.discover_routes))
                     }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -401,7 +403,7 @@ class MapsHandling(private val context: Context) {
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        "Add more markers to the map!",
+                                        getString(context, R.string.add_more),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -410,7 +412,7 @@ class MapsHandling(private val context: Context) {
                                 .weight(1f)
                                 .height(60.dp)
                         ) {
-                            Text(text = "Add route")
+                            Text(text = getString(context, R.string.add_route))
                         }
                         Button(
                             onClick = {
@@ -423,7 +425,7 @@ class MapsHandling(private val context: Context) {
                                             if (newPolylines.isNullOrEmpty()) {
                                                 Toast.makeText(
                                                     context,
-                                                    "Service not available.",
+                                                    getString(context, R.string.no_service),
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -435,7 +437,7 @@ class MapsHandling(private val context: Context) {
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        "No markers are placed",
+                                        getString(context, R.string.no_markers),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -444,7 +446,7 @@ class MapsHandling(private val context: Context) {
                                 .weight(1f)
                                 .height(60.dp)
                         ) {
-                            Text(text = "Delete last")
+                            Text(text = getString(context, R.string.delete_last))
                         }
                     }
                 }
@@ -456,7 +458,8 @@ class MapsHandling(private val context: Context) {
         latLang: LatLng,
         markingEnabled: MutableState<Boolean>,
         markers: MutableList<LatLng>,
-        polylines: MutableState<List<LatLng>?>
+        polylines: MutableState<List<LatLng>?>,
+        context: Context
     ) {
         if (markingEnabled.value) {
             markers.add(latLang)
@@ -469,7 +472,7 @@ class MapsHandling(private val context: Context) {
                     if (newPolylines.isNullOrEmpty()) {
                         Toast.makeText(
                             context,
-                            "Service not available.",
+                            getString(context, R.string.no_service),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -483,7 +486,7 @@ class MapsHandling(private val context: Context) {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun ShowNameDialog(isVisible: MutableState<Boolean>) {
+    private fun ShowNameDialog(isVisible: MutableState<Boolean>, context: Context) {
         var inputText by remember { mutableStateOf("") }
 
         ModalBottomSheet(
@@ -495,7 +498,7 @@ class MapsHandling(private val context: Context) {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Name your new Route!",
+                    text = getString(context, R.string.name_route),
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -503,7 +506,7 @@ class MapsHandling(private val context: Context) {
                 OutlinedTextField(
                     value = inputText,
                     onValueChange = { inputText = it },
-                    label = { Text("Name") },
+                    label = { Text(getString(context, R.string.name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -514,12 +517,12 @@ class MapsHandling(private val context: Context) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = { isVisible.value = false }) {
-                        Text("Cancel")
+                        Text(getString(context, R.string.cancel))
                     }
                     TextButton(onClick = {
                         isVisible.value = false
                     }) {
-                        Text("Add")
+                        Text(getString(context, R.string.add))
                     }
                 }
             }

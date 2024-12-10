@@ -1,5 +1,6 @@
 package com.app.velopath.login
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import kotlinx.serialization.Serializable
 
@@ -30,7 +32,8 @@ object SignInScreen
 @Composable
 fun PrintSignInScreen(
     onSignInClick: () -> Unit,
-    darkTheme: Boolean
+    darkTheme: Boolean,
+    context: Context
 ) {
     Box(
         modifier = Modifier
@@ -56,28 +59,28 @@ fun PrintSignInScreen(
             }
 
             Text(
-                text = "Welcome to:",
+                text = getString(context, R.string.welcome_to),
                 style = MaterialTheme.typography.headlineMedium
             )
 
             Text(
-                text = "Velopath",
+                text = getString(context, R.string.app_name),
                 style = MaterialTheme.typography.displayLarge
             )
 
             Text(
-                text = "Please continue with",
+                text = getString(context, R.string.please_continue),
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            GoogleSignInButton(onSignInClick, darkTheme)
+            GoogleSignInButton(onSignInClick, darkTheme, context)
         }
     }
 }
 
 
 @Composable
-fun GoogleSignInButton(onSignInClick: () -> Unit, isDarkTheme: Boolean) {
+fun GoogleSignInButton(onSignInClick: () -> Unit, isDarkTheme: Boolean, context: Context) {
 
     val backgroundColor = if (isDarkTheme) Color.White else Color.Black
     val contentColor = if (isDarkTheme) Color.Black else Color.White
@@ -98,6 +101,6 @@ fun GoogleSignInButton(onSignInClick: () -> Unit, isDarkTheme: Boolean) {
             contentDescription = "Google Logo",
             modifier = Modifier.padding(end = 8.dp)
         )
-        Text(text = "Sign in with Google", modifier = Modifier.padding(6.dp))
+        Text(text = getString(context, R.string.sign_google), modifier = Modifier.padding(6.dp))
     }
 }

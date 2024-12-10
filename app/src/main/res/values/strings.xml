@@ -10,6 +10,7 @@
     <string name="delete">Delete</string>
     <string name="name">Name</string>
     <string name="send">Send</string>
+    <string name="show">Show</string>
     <string name="version">"Version: "</string>
     <string name="feedback">Feedback</string>
     <string name="message">Message</string>
@@ -18,6 +19,9 @@
     <string name="feedback_sent">Feedback sent!</string>
     <string name="github_page">"Github Page"</string>
     <string name="home">Home</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="hello">"Hello, "</string>
     <string name="your_profile">Your Profile</string>
     <string name="saved_routes">Saved Routes</string>
     <string name="about">About</string>
@@ -37,4 +41,18 @@
     <string name="switch_name">Switch to dark theme</string>
     <string name="switch_account">If you want to switch accounts, click here:</string>
     <string name="sign_out">Sign out</string>
+    <string name="welcome_to">Welcome to:</string>
+    <string name="please_continue">Please continue with</string>
+    <string name="sign_google">Sign in with Google</string>
+    <string name="logging_in">Logging You in, please wait</string>
+    <string name="error">"Error: "</string>
+    <string name="check_internet">Map may not load. Check Internet</string>
+    <string name="location_unknown">User\'s location unknown</string>
+    <string name="discover_routes">Discover nearby routes</string>
+    <string name="add_more">Add more markers to the map!</string>
+    <string name="add_route">Add route</string>
+    <string name="no_service">Service not available</string>
+    <string name="no_markers">No markers are placed</string>
+    <string name="delete_last">Delete last</string>
+    <string name="name_route">Name your new Route!</string>
 </resources>
