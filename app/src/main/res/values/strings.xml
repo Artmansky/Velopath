@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Velopath</string>
+    <string name="app_logo">App logo</string>
+    <string name="feedback_info">Give us information about possible updates or bugs You found</string>
+    <string name="app_info_message">Hi, (Thomas) author here. This app is my engineering project for Silesian University of Technology. Project aims to deliver tool with multiple roads to cycle around. Built using Jetpack Compose and with support for Material Design 3.</string>
+</resources>
