@@ -144,7 +144,8 @@ fun MainNavigation(
                         }
                     }
                 },
-                userName = user?.displayName ?: getString(context, R.string.nickname)
+                userName = user?.displayName ?: getString(context, R.string.nickname),
+                context = context
             )
         },
         drawerState = drawerState,

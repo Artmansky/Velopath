@@ -129,7 +129,8 @@ class MapsHandling(private val context: Context) {
                 MapUiSettings(
                     zoomControlsEnabled = false,
                     myLocationButtonEnabled = false,
-                    rotationGesturesEnabled = false
+                    rotationGesturesEnabled = false,
+                    mapToolbarEnabled = false
                 )
             }
 
