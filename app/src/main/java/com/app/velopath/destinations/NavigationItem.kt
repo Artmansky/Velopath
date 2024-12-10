@@ -1,5 +1,6 @@
 package com.app.velopath.destinations
 
+import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -14,6 +15,8 @@ import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.content.ContextCompat.getString
+import com.app.velopath.R
 import com.app.velopath.destinations.routes.Routes
 
 data class NavigationItem(
@@ -24,42 +27,44 @@ data class NavigationItem(
 )
 
 object GlobalData {
-    val tabs = listOf(
-        NavigationItem(
-            title = "Home",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
-            destinationNav = Home
-        ),
-        NavigationItem(
-            title = "Your Profile",
-            selectedIcon = Icons.Filled.Person,
-            unselectedIcon = Icons.Outlined.Person,
-            destinationNav = Profile
-        ),
-        NavigationItem(
-            title = "Saved Routes",
-            selectedIcon = Icons.Filled.Place,
-            unselectedIcon = Icons.Outlined.Place,
-            destinationNav = Routes
-        ),
-        NavigationItem(
-            title = "About",
-            selectedIcon = Icons.Filled.Info,
-            unselectedIcon = Icons.Outlined.Info,
-            destinationNav = Info
-        ),
-        NavigationItem(
-            title = "Settings",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-            destinationNav = Settings
-        ),
-        NavigationItem(
-            title = "Send Feedback",
-            selectedIcon = Icons.Filled.ThumbUp,
-            unselectedIcon = Icons.Outlined.ThumbUp,
-            destinationNav = Feedback
+    fun getTabs(context: Context): List<NavigationItem> {
+        return listOf(
+            NavigationItem(
+                title = getString(context, R.string.home),
+                selectedIcon = Icons.Filled.Home,
+                unselectedIcon = Icons.Outlined.Home,
+                destinationNav = Home
+            ),
+            NavigationItem(
+                title = getString(context, R.string.your_profile),
+                selectedIcon = Icons.Filled.Person,
+                unselectedIcon = Icons.Outlined.Person,
+                destinationNav = Profile
+            ),
+            NavigationItem(
+                title = getString(context, R.string.saved_routes),
+                selectedIcon = Icons.Filled.Place,
+                unselectedIcon = Icons.Outlined.Place,
+                destinationNav = Routes
+            ),
+            NavigationItem(
+                title = getString(context, R.string.about),
+                selectedIcon = Icons.Filled.Info,
+                unselectedIcon = Icons.Outlined.Info,
+                destinationNav = Info
+            ),
+            NavigationItem(
+                title = getString(context, R.string.settings),
+                selectedIcon = Icons.Filled.Settings,
+                unselectedIcon = Icons.Outlined.Settings,
+                destinationNav = Settings
+            ),
+            NavigationItem(
+                title = getString(context, R.string.send_feedback),
+                selectedIcon = Icons.Filled.ThumbUp,
+                unselectedIcon = Icons.Outlined.ThumbUp,
+                destinationNav = Feedback
+            )
         )
-    )
+    }
 }

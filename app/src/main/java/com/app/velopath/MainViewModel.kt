@@ -112,7 +112,7 @@ fun MainNavigation(
     onDarkThemeChange: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-    val items = GlobalData.tabs
+    val items = GlobalData.getTabs(context)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val navController = rememberNavController()
     val credentialManager = CredentialManager.create(context)

@@ -29,6 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
+import com.app.velopath.R
 import com.app.velopath.handlers.isLocationPermissionGranted
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
@@ -53,11 +55,15 @@ fun PrintSettings(
     ) { isGranted ->
         isPermissionGranted = isGranted
         if (isGranted) {
-            Toast.makeText(context, "Location permission granted", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                getString(context, R.string.location_granted),
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
             Toast.makeText(
                 context,
-                "Location permission denied or request blocked by system",
+                getString(context, R.string.location_denied),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -89,7 +95,7 @@ fun PrintSettings(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Click here to grant localization permissions and gain full maps experience",
+                            text = getString(context, R.string.click_here),
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.weight(1f)
                         )
@@ -101,7 +107,7 @@ fun PrintSettings(
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        "Location permission already granted",
+                                        getString(context, R.string.location_granted),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -110,7 +116,12 @@ fun PrintSettings(
                                 containerColor = if (isPermissionGranted) Color.Green else Color.Red
                             )
                         ) {
-                            Text(text = if (isPermissionGranted) "Granted" else "Grant")
+                            Text(
+                                text = if (isPermissionGranted) getString(
+                                    context,
+                                    R.string.granted
+                                ) else getString(context, R.string.grant)
+                            )
                         }
                     }
 
@@ -125,7 +136,7 @@ fun PrintSettings(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Switch to dark theme",
+                            text = getString(context, R.string.switch_name),
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.weight(1f)
                         )
@@ -139,7 +150,7 @@ fun PrintSettings(
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = "If you want to switch accounts, click here:",
+                        text = getString(context, R.string.switch_account),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
@@ -147,7 +158,7 @@ fun PrintSettings(
                         onClick = onSignOut,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Sign Out")
+                        Text(text = getString(context, R.string.sign_out))
                     }
                 }
             }

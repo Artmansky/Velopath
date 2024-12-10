@@ -27,7 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import coil3.compose.AsyncImage
+import com.app.velopath.R
 import com.app.velopath.destinations.routes.AnimatedExpandableList
 import com.app.velopath.destinations.routes.routeItems
 import com.app.velopath.ui.TopBar
@@ -85,7 +87,7 @@ fun PrintProfile(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = userData?.displayName ?: "Nickname",
+                        text = userData?.displayName ?: getString(context, R.string.nickname),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -111,11 +113,17 @@ fun PrintProfile(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Total added", style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                getString(context, R.string.total_added),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                             Text("Value 1", style = MaterialTheme.typography.bodyLarge)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Total liked", style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                getString(context, R.string.total_liked),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                             Text("Value 2", style = MaterialTheme.typography.bodyLarge)
                         }
                     }
@@ -125,11 +133,17 @@ fun PrintProfile(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Total likes", style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                getString(context, R.string.total_likes),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                             Text("Value 3", style = MaterialTheme.typography.bodyLarge)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("Total routes", style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                getString(context, R.string.total_routes),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                             Text("Value 4", style = MaterialTheme.typography.bodyLarge)
                         }
                     }
@@ -145,7 +159,7 @@ fun PrintProfile(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = "Your added routes:",
+                    text = getString(context, R.string.your_added),
                     style = MaterialTheme.typography.titleLarge
                 )
             }
