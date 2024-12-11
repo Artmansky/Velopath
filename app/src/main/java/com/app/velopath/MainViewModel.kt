@@ -121,7 +121,7 @@ fun MainNavigation(
     val gestures = rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    val mapsHandler = MapsHandling(context)
+    val mapsHandler = MapsHandling(context, database)
 
     val isDarkTheme = when (themeMode) {
         ThemeMode.LIGHT -> false

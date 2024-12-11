@@ -55,7 +55,7 @@ import com.google.maps.android.compose.MapUiSettings
 val routeItems = listOf(
     RouteItem(
         title = "Road near the lake",
-        author = "John Doe",
+        author = 3434,
         id = "1",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
         startLang = 43.65107,
@@ -68,7 +68,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "Take me here when you can",
-        author = "Jane Smith",
+        author = 343432,
         id = "2",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Vancouver&destination=Seattle",
         startLang = 49.28273,
@@ -81,7 +81,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "My new route",
-        author = "Alice Johnson",
+        author = 23423,
         id = "3",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=San+Francisco&destination=Los+Angeles",
         startLang = 37.774929,
@@ -94,7 +94,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "Road near the park",
-        author = "Robert Brown",
+        author = 23432,
         id = "4",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Berlin&destination=Munich",
         startLang = 52.520008,
@@ -107,7 +107,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "100km's in one drive",
-        author = "Emily Davis",
+        author = 234234,
         id = "5",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=London&destination=Brighton",
         startLang = 51.507351,
@@ -120,7 +120,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "Road near the lake",
-        author = "John Doe",
+        author = 234234,
         id = "1",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
         startLang = 43.65107,
@@ -133,7 +133,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "Take me here when you can",
-        author = "Jane Smith",
+        author = 324234234,
         id = "2",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Vancouver&destination=Seattle",
         startLang = 49.28273,
@@ -146,7 +146,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "My new route",
-        author = "Alice Johnson",
+        author = 234234234,
         id = "3",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=San+Francisco&destination=Los+Angeles",
         startLang = 37.774929,
@@ -159,7 +159,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "Road near the park",
-        author = "Robert Brown",
+        author = 242342342,
         id = "4",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Berlin&destination=Munich",
         startLang = 52.520008,
@@ -172,7 +172,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "100km's in one drive",
-        author = "Emily Davis",
+        author = 234234,
         id = "5",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=London&destination=Brighton",
         startLang = 51.507351,
@@ -185,7 +185,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "Road near the lake",
-        author = "John Doe",
+        author = 234234234,
         id = "1",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
         startLang = 43.65107,
@@ -198,7 +198,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "Take me here when you can",
-        author = "Jane Smith",
+        author = 2344234,
         id = "2",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Vancouver&destination=Seattle",
         startLang = 49.28273,
@@ -211,7 +211,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "My new route",
-        author = "Alice Johnson",
+        author = 234234234,
         id = "3",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=San+Francisco&destination=Los+Angeles",
         startLang = 37.774929,
@@ -224,7 +224,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "Road near the park",
-        author = "Robert Brown",
+        author = 324234234,
         id = "4",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Berlin&destination=Munich",
         startLang = 52.520008,
@@ -237,7 +237,7 @@ val routeItems = listOf(
     ),
     RouteItem(
         title = "100km's in one drive",
-        author = "Emily Davis",
+        author = 324234234,
         id = "5",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=London&destination=Brighton",
         startLang = 51.507351,

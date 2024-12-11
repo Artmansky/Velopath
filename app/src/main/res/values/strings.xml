@@ -55,4 +55,7 @@
     <string name="no_markers">No markers are placed</string>
     <string name="delete_last">Delete last</string>
     <string name="name_route">Name your new Route!</string>
+    <string name="too_short">Route name too short!</string>
+    <string name="route_added">Route added successfully</string>
+    <string name="delete_success">Delete success</string>
 </resources>

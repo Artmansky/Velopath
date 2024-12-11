@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
+import com.app.velopath.database.FirebaseManagement
 import com.app.velopath.destinations.routes.routeItems
 import com.app.velopath.handlers.ApiHandlers
 import com.app.velopath.handlers.getCurrentLocation
@@ -62,7 +63,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 
 
-class MapsHandling(private val context: Context) {
+class MapsHandling(private val context: Context, private val database: FirebaseManagement) {
     private var defaultLocation: Pair<Double, Double> = Pair(-73.977001, 40.728847)
     private var apiHandler: ApiHandlers = ApiHandlers(context)
 
@@ -223,7 +224,7 @@ class MapsHandling(private val context: Context) {
                     }
 
                     if (isAddDialogVisible.value) {
-                        ShowNameDialog(isAddDialogVisible, context)
+                        ShowNameDialog(isAddDialogVisible, apiHandler, markers, polylines, context)
                     }
 
                     if (isDiscoverVisible.value) {
@@ -487,7 +488,13 @@ class MapsHandling(private val context: Context) {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun ShowNameDialog(isVisible: MutableState<Boolean>, context: Context) {
+    private fun ShowNameDialog(
+        isVisible: MutableState<Boolean>,
+        apiHandler: ApiHandlers,
+        markers: MutableList<LatLng>,
+        polylines: MutableState<List<LatLng>?>,
+        context: Context
+    ) {
         var inputText by remember { mutableStateOf("") }
 
         ModalBottomSheet(
@@ -517,11 +524,50 @@ class MapsHandling(private val context: Context) {
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = { isVisible.value = false }) {
+                    TextButton(onClick = {
+                        database.deleteRoute(id = "VhJG4y2VgbplnepKoDVN", onResult = {
+                            Toast.makeText(
+                                context,
+                                getString(context, R.string.delete_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            isVisible.value = false
+                        }, onFail = {
+                            Toast.makeText(
+                                context,
+                                getString(context, R.string.no_service),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        })
+                    }) {
                         Text(getString(context, R.string.cancel))
                     }
                     TextButton(onClick = {
-                        isVisible.value = false
+                        if (inputText.isEmpty() || inputText.length < 4) {
+                            Toast.makeText(
+                                context,
+                                getString(context, R.string.too_short),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            database.addNewRoute(
+                                inputText,
+                                apiHandler.overviewPolyline,
+                                apiHandler.navigationLink,
+                                apiHandler.distance,
+                                apiHandler.duration
+                            ) {
+                                Toast.makeText(
+                                    context,
+                                    getString(context, R.string.route_added),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            markers.clear()
+                            polylines.value = null
+                            apiHandler.clearValues()
+                            isVisible.value = false
+                        }
                     }) {
                         Text(getString(context, R.string.add))
                     }
