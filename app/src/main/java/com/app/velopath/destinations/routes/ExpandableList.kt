@@ -55,11 +55,13 @@ import com.google.maps.android.compose.MapUiSettings
 @Composable
 fun AnimatedExpandableList(
     isAuthor: Boolean,
-    itemsDisplay: List<RouteItem>,
+    initialItems: List<RouteItem>,
     addLikedFunction: (String, () -> Unit, () -> Unit) -> Unit,
     isDarkMode: Boolean,
     context: Context
 ) {
+    val itemsDisplay = remember { mutableStateListOf(*initialItems.toTypedArray()) }
+
     if (itemsDisplay.isEmpty()) {
         Box(
             modifier = Modifier
@@ -76,6 +78,7 @@ fun AnimatedExpandableList(
         val expandedItems = remember {
             mutableStateListOf(*BooleanArray(itemsDisplay.size) { false }.toTypedArray())
         }
+
         val listState = rememberLazyListState()
 
         val mapStyleOptions = remember {
@@ -100,6 +103,7 @@ fun AnimatedExpandableList(
                     isExpanded = expandedItems[index],
                     isAuthor = isAuthor,
                     addLikedFunction = addLikedFunction,
+                    onDelete = { itemsDisplay.remove(item) },
                     onExpandedChange = { expandedItems[index] = it }
                 )
             }
@@ -115,6 +119,7 @@ fun ExpandedItem(
     isExpanded: Boolean,
     isAuthor: Boolean,
     addLikedFunction: (String, () -> Unit, () -> Unit) -> Unit,
+    onDelete: () -> Unit,
     onExpandedChange: (Boolean) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -225,7 +230,10 @@ fun ExpandedItem(
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             if (isAuthor) {
-                                Button(onClick = {}) {
+                                Button(onClick = {
+                                    addLikedFunction(item.id, {}, {})
+                                    onDelete()
+                                }) {
                                     Text(getString(context, R.string.delete))
                                 }
                             }
