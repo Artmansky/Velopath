@@ -56,7 +56,7 @@ val routeItems = listOf(
     RouteItem(
         title = "Road near the lake",
         author = "sdfsdf4",
-        id = "434343",
+        id = "4ggdgfdg3",
         navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
         startLang = 43.65107,
         startLong = -79.347015,
@@ -72,6 +72,7 @@ val routeItems = listOf(
 fun AnimatedExpandableList(
     isAuthor: Boolean,
     itemsDisplay: List<RouteItem>,
+    addLikedFunction: (String) -> Unit,
     isDarkMode: Boolean,
     context: Context
 ) {
@@ -114,6 +115,7 @@ fun AnimatedExpandableList(
                     item = item,
                     isExpanded = expandedItems[index],
                     isAuthor = isAuthor,
+                    addLikedFunction = addLikedFunction,
                     onExpandedChange = { expandedItems[index] = it }
                 )
             }
@@ -128,6 +130,7 @@ fun ExpandedItem(
     item: RouteItem,
     isExpanded: Boolean,
     isAuthor: Boolean,
+    addLikedFunction: (String) -> Unit,
     onExpandedChange: (Boolean) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -161,7 +164,7 @@ fun ExpandedItem(
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .clickable {
-                                //Zaimplementowac Clicka do bazy
+                                addLikedFunction(item.id)
                             }
                     )
                 }

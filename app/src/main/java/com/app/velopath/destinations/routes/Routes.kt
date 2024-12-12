@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.app.velopath.database.FirebaseManagement
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
 
@@ -17,6 +18,7 @@ fun PrintRoutes(
     modifier: Modifier = Modifier,
     isDarkMode: Boolean,
     title: String,
+    database: FirebaseManagement,
     onClick: () -> Unit,
     context: Context
 ) {
@@ -29,7 +31,7 @@ fun PrintRoutes(
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            AnimatedExpandableList(false, routeItems, isDarkMode, context)
+            AnimatedExpandableList(false, routeItems, database::addLiked, isDarkMode, context)
         }
     }
 }

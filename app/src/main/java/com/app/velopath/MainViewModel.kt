@@ -242,6 +242,7 @@ fun MainNavigation(
                     gestures.value = true
                     PrintRoutes(
                         title = items[selectedItemIndex].title,
+                        database = database,
                         onClick = {
                             scope.launch { drawerState.open() }
                         },

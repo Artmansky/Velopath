@@ -2,6 +2,8 @@ package com.app.velopath.database
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.memoryCacheSettings
@@ -175,5 +177,39 @@ class FirebaseManagement(private var user: FirebaseUser?) {
             .addOnFailureListener {
                 onFail()
             }
+    }
+
+    fun addLiked(routeID: String) {
+        user?.uid?.let { id ->
+            if (id.isNotEmpty()) {
+                val documentRef = db.collection("Saved").document(id)
+
+                documentRef.update(
+                    "likedRoutes",
+                    FieldValue.arrayUnion(routeID)
+                ) // Attempt to update
+                    .addOnSuccessListener {
+
+                    }
+                    .addOnFailureListener { exception ->
+                        // Handle the case where the document does not exist
+                        if (exception is FirebaseFirestoreException) {
+                            // Create the document with the initial array
+                            val initialData = mapOf(
+                                "likedRoutes" to listOf(routeID)
+                            )
+                            documentRef.set(initialData)
+                                .addOnSuccessListener { }
+                                .addOnFailureListener { }
+                        } else {
+
+                        }
+                    }
+            }
+        }
+    }
+
+    fun deleteLiked(routeID: String, onResult: () -> Unit, onFail: () -> Unit) {
+
     }
 }
