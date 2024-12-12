@@ -1,9 +1,9 @@
 package com.app.velopath.database
 
 data class RouteItem(
-    val title: String,
-    val author: Int,
     val id: String,
+    val title: String,
+    val author: String,
     val navigationLink: String,
     val startLang: Double,
     val startLong: Double,

@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import com.app.velopath.database.FirebaseManagement
-import com.app.velopath.destinations.routes.routeItems
+import com.app.velopath.database.RouteItem
 import com.app.velopath.handlers.ApiHandlers
 import com.app.velopath.handlers.getCurrentLocation
 import com.app.velopath.handlers.isLocationPermissionGranted
@@ -567,20 +567,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = {
-                        database.deleteRoute(id = "VhJG4y2VgbplnepKoDVN", onResult = {
-                            Toast.makeText(
-                                context,
-                                getString(context, R.string.delete_success),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            isVisible.value = false
-                        }, onFail = {
-                            Toast.makeText(
-                                context,
-                                getString(context, R.string.no_service),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        })
+                        isVisible.value = false
                     }) {
                         Text(getString(context, R.string.cancel))
                     }
@@ -635,10 +622,44 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
         showPolylines: MutableState<List<LatLng>?>,
         latLang: LatLng
     ) {
+        val fetchedItems = remember { mutableStateOf<List<RouteItem>>(emptyList()) }
+        val isLoading = remember { mutableStateOf(true) }
+
+        LaunchedEffect(Unit) {
+            if (isVisible.value) {
+                database.fetchNearbyRoutes(
+                    latLng = latLang,
+                    onResult = { routes ->
+                        fetchedItems.value = routes
+                        isLoading.value = false
+                    },
+                    onFail = {
+                        isLoading.value = false
+                    }
+                )
+            }
+        }
         ModalBottomSheet(
             onDismissRequest = { isVisible.value = false }
         ) {
-            DirectionsList(routeItems, controlsVisible, showMarkers, showPolylines, context)
+            if (isLoading.value) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                DirectionsList(
+                    fetchedItems.value,
+                    controlsVisible,
+                    showMarkers,
+                    showPolylines,
+                    context
+                )
+            }
         }
     }
 

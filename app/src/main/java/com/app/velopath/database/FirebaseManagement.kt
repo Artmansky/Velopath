@@ -1,5 +1,6 @@
 package com.app.velopath.database
 
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.firestore
@@ -7,6 +8,7 @@ import com.google.firebase.firestore.ktx.memoryCacheSettings
 import com.google.firebase.firestore.ktx.persistentCacheSettings
 import com.google.firebase.ktx.Firebase
 import com.google.maps.android.PolyUtil
+import kotlin.math.abs
 
 class FirebaseManagement(private var user: FirebaseUser?) {
     private val db = Firebase.firestore
@@ -60,16 +62,16 @@ class FirebaseManagement(private var user: FirebaseUser?) {
 
         user?.uid.let { id ->
             val newRoute = hashMapOf(
-                "authorID" to id,
                 "title" to routeName,
-                "navLink" to navigationLink,
+                "author" to id,
+                "navigationLink" to navigationLink,
                 "startLang" to points[0].latitude,
                 "startLong" to points[0].longitude,
-                "engLang" to points[points.size - 1].latitude,
-                "longLang" to points[points.size - 1].longitude,
+                "endLang" to points[points.size - 1].latitude,
+                "endLong" to points[points.size - 1].longitude,
                 "distance" to distance,
                 "duration" to duration,
-                "polyline" to overviewPolyline
+                "overviewPolyline" to overviewPolyline
             )
 
             db.collection("Routes")
@@ -87,6 +89,49 @@ class FirebaseManagement(private var user: FirebaseUser?) {
         db.collection("Routes").document(id).delete()
             .addOnSuccessListener {
                 onResult()
+            }
+            .addOnFailureListener {
+                onFail()
+            }
+    }
+
+    fun fetchNearbyRoutes(
+        latLng: LatLng,
+        onResult: (List<RouteItem>) -> Unit,
+        onFail: () -> Unit
+    ) {
+        db.collection("Routes").get()
+            .addOnSuccessListener { documents ->
+                val emptyRouteList: MutableList<RouteItem> = mutableListOf()
+                if (documents.isEmpty) {
+                    onResult(emptyList())
+                } else {
+                    for (document in documents) {
+                        try {
+                            val startLang = document.getDouble("startLang")
+                            val startLong = document.getDouble("startLong")
+                            if (abs(startLang!! - latLng.latitude) <= 0.01 && abs(startLong!! - latLng.longitude) <= 0.01) {
+                                val newItem = RouteItem(
+                                    document.id,
+                                    document.getString("title")!!,
+                                    document.getString("author")!!,
+                                    document.getString("navigationLink")!!,
+                                    startLang,
+                                    startLong,
+                                    document.getDouble("endLang")!!,
+                                    document.getDouble("endLong")!!,
+                                    document.getDouble("distance")!!,
+                                    document.getLong("duration")!!.toInt(),
+                                    document.getString("overviewPolyline")!!
+                                )
+                                emptyRouteList.add(newItem)
+                            }
+                        } catch (e: Exception) {
+                            continue
+                        }
+                    }
+                    onResult(emptyRouteList)
+                }
             }
             .addOnFailureListener {
                 onFail()
