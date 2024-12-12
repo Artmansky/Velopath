@@ -52,27 +52,11 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 
 
-val routeItems = listOf(
-    RouteItem(
-        title = "Road near the lake",
-        author = "sdfsdf4",
-        id = "4ggdgfdg3",
-        navigationLink = "https://www.google.com/maps/dir/?api=1&origin=Toronto&destination=Montreal",
-        startLang = 43.65107,
-        startLong = -79.347015,
-        endLang = 45.50169,
-        endLong = -73.567253,
-        distance = 540.0,
-        duration = 320,
-        overviewPolyline = "abcd1234xyz",
-    )
-)
-
 @Composable
 fun AnimatedExpandableList(
     isAuthor: Boolean,
     itemsDisplay: List<RouteItem>,
-    addLikedFunction: (String) -> Unit,
+    addLikedFunction: (String, () -> Unit, () -> Unit) -> Unit,
     isDarkMode: Boolean,
     context: Context
 ) {
@@ -130,7 +114,7 @@ fun ExpandedItem(
     item: RouteItem,
     isExpanded: Boolean,
     isAuthor: Boolean,
-    addLikedFunction: (String) -> Unit,
+    addLikedFunction: (String, () -> Unit, () -> Unit) -> Unit,
     onExpandedChange: (Boolean) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -164,7 +148,7 @@ fun ExpandedItem(
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .clickable {
-                                addLikedFunction(item.id)
+                                addLikedFunction(item.id, {}, {})
                             }
                     )
                 }

@@ -109,27 +109,26 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                     onResult(emptyList())
                 } else {
                     for (document in documents) {
-                        try {
-                            val startLang = document.getDouble("startLang")
-                            val startLong = document.getDouble("startLong")
-                            if (abs(startLang!! - latLng.latitude) <= 0.01 && abs(startLong!! - latLng.longitude) <= 0.01) {
+                        document.data.let { documentData ->
+                            if (abs((documentData["startLang"] as Double) - latLng.latitude) <= 0.01 && abs(
+                                    (documentData["startLong"] as Double) - latLng.longitude
+                                ) <= 0.01
+                            ) {
                                 val newItem = RouteItem(
                                     document.id,
-                                    document.getString("title")!!,
-                                    document.getString("author")!!,
-                                    document.getString("navigationLink")!!,
-                                    startLang,
-                                    startLong,
-                                    document.getDouble("endLang")!!,
-                                    document.getDouble("endLong")!!,
-                                    document.getDouble("distance")!!,
-                                    document.getLong("duration")!!.toInt(),
-                                    document.getString("overviewPolyline")!!
+                                    documentData["title"] as String,
+                                    documentData["author"] as String,
+                                    documentData["navigationLink"] as String,
+                                    documentData["startLang"] as Double,
+                                    documentData["startLong"] as Double,
+                                    documentData["endLang"] as Double,
+                                    documentData["endLong"] as Double,
+                                    documentData["distance"] as Double,
+                                    (documentData["duration"] as Long).toInt(),
+                                    documentData["overviewPolyline"] as String
                                 )
                                 emptyRouteList.add(newItem)
                             }
-                        } catch (e: Exception) {
-                            continue
                         }
                     }
                     onResult(emptyRouteList)
@@ -152,23 +151,21 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                     onResult(emptyList())
                 } else {
                     for (document in documents) {
-                        try {
+                        document.data.let { documentData ->
                             val newItem = RouteItem(
                                 document.id,
-                                document.getString("title")!!,
-                                document.getString("author")!!,
-                                document.getString("navigationLink")!!,
-                                document.getDouble("startLang")!!,
-                                document.getDouble("startLong")!!,
-                                document.getDouble("endLang")!!,
-                                document.getDouble("endLong")!!,
-                                document.getDouble("distance")!!,
-                                document.getLong("duration")!!.toInt(),
-                                document.getString("overviewPolyline")!!
+                                documentData["title"] as String,
+                                documentData["author"] as String,
+                                documentData["navigationLink"] as String,
+                                documentData["startLang"] as Double,
+                                documentData["startLong"] as Double,
+                                documentData["endLang"] as Double,
+                                documentData["endLong"] as Double,
+                                documentData["distance"] as Double,
+                                (documentData["duration"] as Long).toInt(),
+                                documentData["overviewPolyline"] as String
                             )
                             emptyRouteList.add(newItem)
-                        } catch (e: Exception) {
-                            continue
                         }
                     }
                     onResult(emptyRouteList)
@@ -179,37 +176,118 @@ class FirebaseManagement(private var user: FirebaseUser?) {
             }
     }
 
-    fun addLiked(routeID: String) {
+    fun addLiked(routeID: String, onResult: () -> Unit, onFail: () -> Unit) {
         user?.uid?.let { id ->
             if (id.isNotEmpty()) {
                 val documentRef = db.collection("Saved").document(id)
-
                 documentRef.update(
                     "likedRoutes",
                     FieldValue.arrayUnion(routeID)
-                ) // Attempt to update
+                )
                     .addOnSuccessListener {
-
+                        onResult()
                     }
                     .addOnFailureListener { exception ->
-                        // Handle the case where the document does not exist
                         if (exception is FirebaseFirestoreException) {
-                            // Create the document with the initial array
                             val initialData = mapOf(
                                 "likedRoutes" to listOf(routeID)
                             )
                             documentRef.set(initialData)
-                                .addOnSuccessListener { }
-                                .addOnFailureListener { }
+                                .addOnSuccessListener {
+                                    onResult()
+                                }
+                                .addOnFailureListener {
+                                    onFail()
+                                }
                         } else {
-
+                            onFail()
                         }
                     }
             }
         }
     }
 
-    fun deleteLiked(routeID: String, onResult: () -> Unit, onFail: () -> Unit) {
+    fun removeLiked(routeID: String, onResult: () -> Unit, onFail: () -> Unit) {
+        user?.uid?.let { id ->
+            if (id.isNotEmpty()) {
+                val documentRef = db.collection("Saved").document(id)
+                documentRef.update("likedRoutes", FieldValue.arrayRemove(routeID))
+                    .addOnSuccessListener {
+                        onResult()
+                    }
+                    .addOnFailureListener { exception ->
+                        if (exception is FirebaseFirestoreException) {
+                            onResult()
+                        } else {
+                            onFail()
+                        }
+                    }
+            }
+        }
+    }
 
+    fun fetchLikedRoutes(onResult: (List<RouteItem>) -> Unit, onFail: () -> Unit) {
+        user?.uid?.let { id ->
+            if (id.isNotEmpty()) {
+                val documentRef = db.collection("Saved").document(id)
+                documentRef.get()
+                    .addOnSuccessListener { document ->
+                        val likedRoutes =
+                            document.get("likedRoutes") as? List<String> ?: emptyList()
+                        if (likedRoutes.isEmpty()) {
+                            onResult(emptyList())
+                        } else {
+                            fetchRouteDetails(likedRoutes, onResult = { list ->
+                                onResult(list)
+                            })
+                        }
+                    }
+                    .addOnFailureListener {
+                        onFail()
+                    }
+            }
+        }
+    }
+
+    private fun fetchRouteDetails(
+        likedRoutes: List<String>,
+        onResult: (List<RouteItem>) -> Unit
+    ) {
+        val routeItems = mutableListOf<RouteItem>()
+        var completedCount = 0
+
+        likedRoutes.forEach { routeID ->
+            db.collection("Routes").document(routeID).get()
+                .addOnSuccessListener { document ->
+                    document.data?.let { documentData ->
+                        val newItem = RouteItem(
+                            document.id,
+                            documentData["title"] as String,
+                            documentData["author"] as String,
+                            documentData["navigationLink"] as String,
+                            documentData["startLang"] as Double,
+                            documentData["startLong"] as Double,
+                            documentData["endLang"] as Double,
+                            documentData["endLong"] as Double,
+                            documentData["distance"] as Double,
+                            (documentData["duration"] as Long).toInt(),
+                            documentData["overviewPolyline"] as String
+                        )
+                        routeItems.add(newItem)
+                    }
+                    completedCount++
+
+                    if (completedCount == likedRoutes.size) {
+                        onResult(routeItems)
+                    }
+                }
+                .addOnFailureListener {
+                    completedCount++
+
+                    if (completedCount == likedRoutes.size) {
+                        onResult(routeItems)
+                    }
+                }
+        }
     }
 }
