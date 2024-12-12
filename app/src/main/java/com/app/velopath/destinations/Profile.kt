@@ -15,11 +15,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,8 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import coil3.compose.AsyncImage
 import com.app.velopath.R
+import com.app.velopath.database.FirebaseManagement
+import com.app.velopath.database.RouteItem
 import com.app.velopath.destinations.routes.AnimatedExpandableList
-import com.app.velopath.destinations.routes.routeItems
 import com.app.velopath.ui.TopBar
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.serialization.Serializable
@@ -45,6 +50,7 @@ fun PrintProfile(
     title: String,
     onClick: () -> Unit,
     userData: FirebaseUser?,
+    database: FirebaseManagement,
     isDarkMode: Boolean,
     context: Context
 ) {
@@ -163,7 +169,45 @@ fun PrintProfile(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            AnimatedExpandableList(routeItems, isDarkMode, context)
+            ProfileListRoutes(isDarkMode, userData, database, context)
         }
+    }
+}
+
+@Composable
+fun ProfileListRoutes(
+    isDarkMode: Boolean,
+    userData: FirebaseUser?,
+    database: FirebaseManagement,
+    context: Context
+) {
+    val fetchedItems = remember { mutableStateOf<List<RouteItem>>(emptyList()) }
+    val isLoading = remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        database.fetchAuthorRoutes(
+            author = userData?.uid,
+            onResult = { routes ->
+                fetchedItems.value = routes
+                isLoading.value = false
+            },
+            onFail = {
+                isLoading.value = false
+            }
+        )
+
+    }
+
+    if (isLoading.value) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        AnimatedExpandableList(true, fetchedItems.value, isDarkMode, context)
     }
 }

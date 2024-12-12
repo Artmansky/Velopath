@@ -233,6 +233,7 @@ fun MainNavigation(
                         },
                         userData = user,
                         isDarkMode = isDarkTheme,
+                        database = database,
                         context = context
                     )
                 }

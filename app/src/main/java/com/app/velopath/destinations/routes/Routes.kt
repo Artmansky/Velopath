@@ -29,7 +29,7 @@ fun PrintRoutes(
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            AnimatedExpandableList(routeItems, isDarkMode, context)
+            AnimatedExpandableList(false, routeItems, isDarkMode, context)
         }
     }
 }

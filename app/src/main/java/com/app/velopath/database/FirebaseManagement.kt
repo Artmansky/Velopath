@@ -137,4 +137,43 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                 onFail()
             }
     }
+
+    fun fetchAuthorRoutes(
+        author: String?,
+        onResult: (List<RouteItem>) -> Unit,
+        onFail: () -> Unit
+    ) {
+        db.collection("Routes").whereEqualTo("author", author).get()
+            .addOnSuccessListener { documents ->
+                val emptyRouteList: MutableList<RouteItem> = mutableListOf()
+                if (documents.isEmpty) {
+                    onResult(emptyList())
+                } else {
+                    for (document in documents) {
+                        try {
+                            val newItem = RouteItem(
+                                document.id,
+                                document.getString("title")!!,
+                                document.getString("author")!!,
+                                document.getString("navigationLink")!!,
+                                document.getDouble("startLang")!!,
+                                document.getDouble("startLong")!!,
+                                document.getDouble("endLang")!!,
+                                document.getDouble("endLong")!!,
+                                document.getDouble("distance")!!,
+                                document.getLong("duration")!!.toInt(),
+                                document.getString("overviewPolyline")!!
+                            )
+                            emptyRouteList.add(newItem)
+                        } catch (e: Exception) {
+                            continue
+                        }
+                    }
+                    onResult(emptyRouteList)
+                }
+            }
+            .addOnFailureListener {
+                onFail()
+            }
+    }
 }
