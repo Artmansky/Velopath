@@ -238,7 +238,8 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
 
                     if (isDiscoverVisible.value) {
                         if (hasPermission) {
-                            val pair = getCurrentLocation(context)
+                            val pair =
+                                getCurrentLocation(context, onFail = { showDialog.value = true })
                             if (pair != null) {
                                 ShowDiscoverDialog(
                                     isDiscoverVisible,
@@ -319,7 +320,9 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     FloatingActionButton(
                         onClick = {
                             if (hasPermission) {
-                                val pair = getCurrentLocation(context)
+                                val pair = getCurrentLocation(
+                                    context,
+                                    onFail = { showDialog.value = true })
                                 if (pair != null) {
                                     cameraPositionState.move(
                                         CameraUpdateFactory.newCameraPosition(
