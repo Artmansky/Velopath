@@ -71,15 +71,15 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
 
     @Composable
     fun PrintMap(modifier: Modifier, darkMode: Boolean, onClick: () -> Unit) {
-        var hasPermission by remember { mutableStateOf(isLocationPermissionGranted(context)) }
+        val hasPermission = remember { mutableStateOf(isLocationPermissionGranted(context)) }
 
         val permissionLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
-            onResult = { isGranted -> hasPermission = isGranted }
+            onResult = { isGranted -> hasPermission.value = isGranted }
         )
 
         LaunchedEffect(hasPermission) {
-            if (!hasPermission) {
+            if (!hasPermission.value) {
                 permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
@@ -91,7 +91,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
     private fun ShowMap(
         modifier: Modifier,
         darkMode: Boolean,
-        hasPermission: Boolean,
+        hasPermission: MutableState<Boolean>,
         onClick: () -> Unit
     ) {
         val isDiscoverVisible = remember { mutableStateOf(false) }
@@ -107,10 +107,15 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
         val showPolylines = remember { mutableStateOf<List<LatLng>?>(null) }
 
         val userLocation = remember {
-            if (hasPermission) getCurrentLocation(
+            if (hasPermission.value) getCurrentLocation(
                 context,
                 onFail = { showDialog.value = true }) else null
         } ?: defaultLocation
+
+        val permissionLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted -> hasPermission.value = isGranted }
+        )
 
         val cameraPositionState = remember {
             CameraPositionState(
@@ -135,7 +140,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
             remember {
                 mutableStateOf(
                     MapProperties(
-                        isMyLocationEnabled = hasPermission,
+                        isMyLocationEnabled = false,
                         mapStyleOptions = mapStyleOptions
                     )
                 )
@@ -188,6 +193,18 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                         isMapLoaded.value = true
                     }
                 ) {
+                    if (hasPermission.value) {
+                        mapProperties.value = MapProperties(
+                            isMyLocationEnabled = true,
+                            mapStyleOptions = mapStyleOptions
+                        )
+                    } else {
+                        MapProperties(
+                            isMyLocationEnabled = false,
+                            mapStyleOptions = mapStyleOptions
+                        )
+                    }
+
                     markers.forEach { latLng ->
                         Marker(
                             state = MarkerState(position = latLng)
@@ -237,7 +254,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     }
 
                     if (isDiscoverVisible.value) {
-                        if (hasPermission) {
+                        if (hasPermission.value) {
                             val pair =
                                 getCurrentLocation(context, onFail = { showDialog.value = true })
                             if (pair != null) {
@@ -256,6 +273,8 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                                 ).show()
                             }
                         } else {
+                            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+
                             Toast.makeText(
                                 context,
                                 getString(context, R.string.location_unknown),
@@ -319,7 +338,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                 ) {
                     FloatingActionButton(
                         onClick = {
-                            if (hasPermission) {
+                            if (hasPermission.value) {
                                 val pair = getCurrentLocation(
                                     context,
                                     onFail = { showDialog.value = true })
@@ -342,6 +361,8 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                                     ).show()
                                 }
                             } else {
+                                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+
                                 Toast.makeText(
                                     context,
                                     getString(context, R.string.location_unknown),
