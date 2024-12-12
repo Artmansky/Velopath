@@ -41,7 +41,6 @@ import com.app.velopath.destinations.Profile
 import com.app.velopath.destinations.Settings
 import com.app.velopath.destinations.routes.PrintRoutes
 import com.app.velopath.destinations.routes.Routes
-import com.app.velopath.handlers.isNetworkAvailable
 import com.app.velopath.login.PrintSignInScreen
 import com.app.velopath.login.SignInScreen
 import com.app.velopath.mapsHandling.MapsHandling
@@ -289,8 +288,7 @@ fun MainNavigation(
                         onClick = {
                             scope.launch { drawerState.open() }
                         },
-                        onFeedbackClick = database::addFeedbackMessage,
-                        networkAvailable = ::isNetworkAvailable
+                        database = database
                     )
                 }
             }

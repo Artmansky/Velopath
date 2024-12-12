@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +51,7 @@ import com.app.velopath.handlers.ApiHandlers
 import com.app.velopath.handlers.getCurrentLocation
 import com.app.velopath.handlers.isLocationPermissionGranted
 import com.app.velopath.handlers.isNetworkAvailable
+import com.app.velopath.handlers.openLocationSettings
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -64,7 +66,7 @@ import com.google.maps.android.compose.Polyline
 
 
 class MapsHandling(private val context: Context, private val database: FirebaseManagement) {
-    private var defaultLocation: Pair<Double, Double> = Pair(-73.977001, 40.728847)
+    private var defaultLocation: Pair<Double, Double> = Pair(51.509865, -0.118092)
     private var apiHandler: ApiHandlers = ApiHandlers(context)
 
     @Composable
@@ -92,8 +94,22 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
         hasPermission: Boolean,
         onClick: () -> Unit
     ) {
+        val isDiscoverVisible = remember { mutableStateOf(false) }
+        val isAddDialogVisible = remember { mutableStateOf(false) }
+        val isMarkingEnabled = remember { mutableStateOf(false) }
+        val isExtraButtonsVisible = remember { mutableStateOf(false) }
+        val isMapLoaded = remember { mutableStateOf(false) }
+        val showDialog = remember { mutableStateOf(false) }
+
+        val markers = remember { mutableStateListOf<LatLng>() }
+        val showMarkers = remember { mutableStateListOf<LatLng>() }
+        val polylines = remember { mutableStateOf<List<LatLng>?>(null) }
+        val showPolylines = remember { mutableStateOf<List<LatLng>?>(null) }
+
         val userLocation = remember {
-            if (hasPermission) getCurrentLocation(context) else null
+            if (hasPermission) getCurrentLocation(
+                context,
+                onFail = { showDialog.value = true }) else null
         } ?: defaultLocation
 
         val cameraPositionState = remember {
@@ -134,17 +150,6 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     mapToolbarEnabled = false
                 )
             }
-
-        val isDiscoverVisible = remember { mutableStateOf(false) }
-        val isAddDialogVisible = remember { mutableStateOf(false) }
-        val isMarkingEnabled = remember { mutableStateOf(false) }
-        val isExtraButtonsVisible = remember { mutableStateOf(false) }
-        val isMapLoaded = remember { mutableStateOf(false) }
-
-        val markers = remember { mutableStateListOf<LatLng>() }
-        val showMarkers = remember { mutableStateListOf<LatLng>() }
-        val polylines = remember { mutableStateOf<List<LatLng>?>(null) }
-        val showPolylines = remember { mutableStateOf<List<LatLng>?>(null) }
 
         Column(modifier = modifier.fillMaxSize()) {
             Box(
@@ -221,6 +226,10 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                                 )
                             }
                         }
+                    }
+
+                    if (showDialog.value) {
+                        AlertWindow(isVisible = showDialog)
                     }
 
                     if (isAddDialogVisible.value) {
@@ -310,16 +319,25 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     FloatingActionButton(
                         onClick = {
                             if (hasPermission) {
-                                cameraPositionState.move(
-                                    CameraUpdateFactory.newCameraPosition(
-                                        CameraPosition(
-                                            LatLng(
-                                                userLocation.first,
-                                                userLocation.second
-                                            ), 15f, 0f, 0f
+                                val pair = getCurrentLocation(context)
+                                if (pair != null) {
+                                    cameraPositionState.move(
+                                        CameraUpdateFactory.newCameraPosition(
+                                            CameraPosition(
+                                                LatLng(
+                                                    pair.first,
+                                                    pair.second
+                                                ), 15f, 0f, 0f
+                                            )
                                         )
                                     )
-                                )
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        getString(context, R.string.location_unknown),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             } else {
                                 Toast.makeText(
                                     context,
@@ -555,14 +573,22 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                                 apiHandler.overviewPolyline,
                                 apiHandler.navigationLink,
                                 apiHandler.distance,
-                                apiHandler.duration
-                            ) {
-                                Toast.makeText(
-                                    context,
-                                    getString(context, R.string.route_added),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                                apiHandler.duration,
+                                onResult = {
+                                    Toast.makeText(
+                                        context,
+                                        getString(context, R.string.route_added),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                onFail = {
+                                    Toast.makeText(
+                                        context,
+                                        getString(context, R.string.no_service),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            )
                             markers.clear()
                             polylines.value = null
                             apiHandler.clearValues()
@@ -590,5 +616,26 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
         ) {
             DirectionsList(routeItems, controlsVisible, showMarkers, showPolylines, context)
         }
+    }
+
+    @Composable
+    fun AlertWindow(isVisible: MutableState<Boolean>) {
+        AlertDialog(
+            onDismissRequest = { isVisible.value = false },
+            title = {
+                Text(text = getString(context, R.string.location_disabled))
+            },
+            text = {
+                Text(text = getString(context, R.string.location_disabled_settings))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    openLocationSettings(context)
+                    isVisible.value = false
+                }) {
+                    Text(text = getString(context, R.string.go))
+                }
+            }
+        )
     }
 }

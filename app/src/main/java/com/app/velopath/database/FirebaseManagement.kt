@@ -26,7 +26,8 @@ class FirebaseManagement(private var user: FirebaseUser?) {
     fun addFeedbackMessage(
         messageContent: String,
         name: String,
-        onResult: (String?) -> Unit
+        onResult: () -> Unit,
+        onFail: () -> Unit
     ) {
         user?.uid.let { id ->
             val message = hashMapOf(
@@ -38,10 +39,10 @@ class FirebaseManagement(private var user: FirebaseUser?) {
             db.collection("Feedback")
                 .add(message)
                 .addOnSuccessListener {
-                    onResult(null)
+                    onResult()
                 }
-                .addOnFailureListener { e ->
-                    onResult(e.message)
+                .addOnFailureListener {
+                    onFail()
                 }
         }
     }
@@ -52,7 +53,8 @@ class FirebaseManagement(private var user: FirebaseUser?) {
         navigationLink: String,
         distance: Double,
         duration: Int,
-        onResult: (String?) -> Unit
+        onResult: () -> Unit,
+        onFail: () -> Unit
     ) {
         val points = PolyUtil.decode(overviewPolyline)
 
@@ -73,21 +75,21 @@ class FirebaseManagement(private var user: FirebaseUser?) {
             db.collection("Routes")
                 .add(newRoute)
                 .addOnSuccessListener {
-                    onResult(null)
+                    onResult()
                 }
-                .addOnFailureListener { e ->
-                    onResult(e.message)
+                .addOnFailureListener {
+                    onFail()
                 }
         }
     }
 
-    fun deleteRoute(id: String, onResult: (String?) -> Unit, onFail: (String?) -> Unit) {
+    fun deleteRoute(id: String, onResult: () -> Unit, onFail: () -> Unit) {
         db.collection("Routes").document(id).delete()
             .addOnSuccessListener {
-                onResult(null)
+                onResult()
             }
             .addOnFailureListener {
-                onFail(null)
+                onFail()
             }
     }
 }

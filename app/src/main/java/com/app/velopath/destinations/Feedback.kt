@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
+import com.app.velopath.database.FirebaseManagement
+import com.app.velopath.handlers.isNetworkAvailable
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
 
@@ -36,8 +38,7 @@ fun PrintFeedback(
     title: String,
     context: Context,
     onClick: () -> Unit,
-    onFeedbackClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit,
-    networkAvailable: (context: Context) -> Boolean
+    database: FirebaseManagement
 ) {
     Scaffold(
         topBar = {
@@ -52,15 +53,14 @@ fun PrintFeedback(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            FeedbackPage(onFeedbackClick, networkAvailable, context)
+            FeedbackPage(database, context)
         }
     }
 }
 
 @Composable
 fun FeedbackPage(
-    onClick: (messageContent: String, name: String, onResult: (String?) -> Unit) -> Unit,
-    networkAvailable: (context: Context) -> Boolean,
+    database: FirebaseManagement,
     context: Context
 ) {
     var name by rememberSaveable { mutableStateOf("") }
@@ -117,7 +117,7 @@ fun FeedbackPage(
                             .show()
                     }
 
-                    !networkAvailable(context) -> {
+                    !isNetworkAvailable(context) -> {
                         Toast.makeText(
                             context,
                             getString(context, R.string.network_error),
@@ -127,13 +127,22 @@ fun FeedbackPage(
                     }
 
                     else -> {
-                        onClick(message, name) {
-                            Toast.makeText(
-                                context,
-                                getString(context, R.string.feedback_sent),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        database.addFeedbackMessage(message, name,
+                            onResult = {
+                                Toast.makeText(
+                                    context,
+                                    getString(context, R.string.feedback_sent),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onFail = {
+                                Toast.makeText(
+                                    context,
+                                    getString(context, R.string.no_service),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        )
 
                         name = ""
                         message = ""
