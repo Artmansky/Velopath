@@ -88,7 +88,7 @@ fun ProfileListRoutes(
         }
     } else {
         AnimatedExpandableList(
-            true,
+            false,
             fetchedItems.value,
             {},
             database::deleteRoute,

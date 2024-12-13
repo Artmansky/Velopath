@@ -3,6 +3,7 @@ package com.app.velopath.mapsHandling
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +20,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +29,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import com.app.velopath.database.RouteItem
+import com.app.velopath.handlers.isNetworkAvailable
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -49,6 +54,7 @@ fun DirectionsList(
     showPolylines: MutableState<List<LatLng>?>,
     navigationLink: MutableState<String>,
     cameraPosition: CameraPositionState,
+    onLikeClicked: (String, () -> Unit, () -> Unit) -> Unit,
     context: Context
 ) {
     if (itemsDisplay.isEmpty()) {
@@ -80,7 +86,8 @@ fun DirectionsList(
                     showMarkers = showMarkers,
                     showPolylines = showPolylines,
                     navigationLink = navigationLink,
-                    cameraPosition = cameraPosition
+                    cameraPosition = cameraPosition,
+                    onLikeClicked = onLikeClicked
                 )
             }
         }
@@ -96,6 +103,7 @@ fun DirectionItem(
     showPolylines: MutableState<List<LatLng>?>,
     navigationLink: MutableState<String>,
     cameraPosition: CameraPositionState,
+    onLikeClicked: (String, () -> Unit, () -> Unit) -> Unit,
     item: RouteItem
 ) {
     Surface(
@@ -104,6 +112,7 @@ fun DirectionItem(
         tonalElevation = 4.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
+        val isLiked = remember { mutableStateOf(false) }
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
@@ -118,11 +127,40 @@ fun DirectionItem(
                     modifier = Modifier.weight(1f)
                 )
                 Icon(
-                    imageVector = Icons.Outlined.Star,
+                    imageVector = if (!isLiked.value) Icons.Rounded.Add else Icons.Filled.Star,
                     contentDescription = "Like Status",
                     modifier = Modifier
                         .clickable {
-                            //Zaimplementowac Clicka do bazy
+                            if (isNetworkAvailable(context)) {
+                                if (!isLiked.value) {
+                                    isLiked.value = !isLiked.value
+                                    onLikeClicked(item.id, {
+                                        Toast.makeText(
+                                            context,
+                                            getString(context, R.string.liked),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }, {
+                                        Toast.makeText(
+                                            context,
+                                            getString(context, R.string.already_liked),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    })
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        getString(context, R.string.already_liked),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    getString(context, R.string.no_service),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                 )
             }

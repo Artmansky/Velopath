@@ -68,7 +68,7 @@ import com.google.maps.android.compose.Polyline
 
 
 class MapsHandling(private val context: Context, private val database: FirebaseManagement) {
-    private var defaultLocation: Pair<Double, Double> = Pair(51.509865, -0.118092)
+    private var defaultLocation: Pair<Double, Double> = Pair(53.483135, -2.200941)
     private var apiHandler: ApiHandlers = ApiHandlers(context)
 
     @Composable
@@ -684,6 +684,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     showPolylines,
                     navigationLink,
                     cameraPosition,
+                    database::addLiked,
                     context
                 )
             }

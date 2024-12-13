@@ -185,16 +185,26 @@ class FirebaseManagement(private var user: FirebaseUser?) {
         user?.uid?.let { id ->
             if (id.isNotEmpty()) {
                 val documentRef = db.collection("Saved").document(id)
-                documentRef.update(
-                    "likedRoutes",
-                    FieldValue.arrayUnion(routeID)
-                )
-                    .addOnSuccessListener {
-                        incrementTotalLiked()
-                        onResult()
-                    }
-                    .addOnFailureListener { exception ->
-                        if (exception is FirebaseFirestoreException) {
+                documentRef.get()
+                    .addOnSuccessListener { document ->
+                        if (document.exists()) {
+                            val likedRoutes =
+                                document.get("likedRoutes") as? List<String> ?: emptyList()
+                            if (routeID in likedRoutes) {
+                                onFail()
+                            } else {
+                                documentRef.update(
+                                    "likedRoutes",
+                                    FieldValue.arrayUnion(routeID)
+                                ).addOnSuccessListener {
+                                    incrementTotalRoutes()
+                                    incrementTotalLiked()
+                                    onResult()
+                                }.addOnFailureListener {
+                                    onFail()
+                                }
+                            }
+                        } else {
                             val initialData = mapOf(
                                 "likedRoutes" to listOf(routeID)
                             )
@@ -202,13 +212,13 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                                 .addOnSuccessListener {
                                     incrementTotalLiked()
                                     onResult()
-                                }
-                                .addOnFailureListener {
+                                }.addOnFailureListener {
                                     onFail()
                                 }
-                        } else {
-                            onFail()
                         }
+                    }
+                    .addOnFailureListener {
+                        onFail()
                     }
             }
         }
@@ -221,6 +231,7 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                 documentRef.update("likedRoutes", FieldValue.arrayRemove(routeID))
                     .addOnSuccessListener {
                         decrementTotalLiked()
+                        decrementTotalRoutes()
                         onResult()
                     }
                     .addOnFailureListener { exception ->
@@ -378,6 +389,12 @@ class FirebaseManagement(private var user: FirebaseUser?) {
     private fun incrementTotalRoutes() {
         user?.uid?.let { id ->
             db.collection("stats").document(id).update("totalRoutes", FieldValue.increment(1))
+        }
+    }
+
+    private fun decrementTotalRoutes() {
+        user?.uid?.let { id ->
+            db.collection("stats").document(id).update("totalRoutes", FieldValue.increment(-1))
         }
     }
 }

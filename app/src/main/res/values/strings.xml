@@ -66,5 +66,6 @@
     <string name="liked">Liked!</string>
     <string name="unliked">Unliked!</string>
     <string name="error_fetching">Error fetching data, check connection</string>
+    <string name="already_liked">Already Liked!</string>
     <string name="location_disabled_settings">Please turn your location for better app experience</string>
 </resources>
