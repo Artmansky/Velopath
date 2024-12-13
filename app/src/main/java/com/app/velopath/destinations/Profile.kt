@@ -1,6 +1,7 @@
 package com.app.velopath.destinations
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import com.app.velopath.database.FirebaseManagement
 import com.app.velopath.database.RouteItem
 import com.app.velopath.database.Stats
 import com.app.velopath.destinations.routes.AnimatedExpandableList
+import com.app.velopath.handlers.isNetworkAvailable
 import com.app.velopath.ui.TopBar
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.serialization.Serializable
@@ -61,17 +63,26 @@ fun PrintProfile(
     val currentAdd = remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
-        database.fetchUserStats(
-            author = userData?.uid,
-            onResult = { stats ->
-                userStats.value = stats
-                currentAdd.intValue = userStats.value.currentAdd
-                isLoading.value = false
-            },
-            onFail = {
-                isLoading.value = false
-            }
-        )
+        if (isNetworkAvailable(context)) {
+            database.fetchUserStats(
+                author = userData?.uid,
+                onResult = { stats ->
+                    userStats.value = stats
+                    currentAdd.intValue = userStats.value.currentAdd
+                    isLoading.value = false
+                },
+                onFail = {
+                    isLoading.value = false
+                }
+            )
+        } else {
+            isLoading.value = false
+            Toast.makeText(
+                context,
+                getString(context, R.string.error_fetching),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     Scaffold(
@@ -140,21 +151,21 @@ fun PrintProfile(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                getString(context, R.string.total_added),
+                                getString(context, R.string.current_add),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             Text(
-                                userStats.value.totalAdd.toString(),
+                                currentAdd.intValue.toString(),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                getString(context, R.string.total_liked),
+                                getString(context, R.string.total_added),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             Text(
-                                currentAdd.intValue.toString(),
+                                userStats.value.totalAdd.toString(),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }
@@ -166,7 +177,7 @@ fun PrintProfile(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                getString(context, R.string.total_likes),
+                                getString(context, R.string.current_likes),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             Text(
@@ -217,17 +228,25 @@ fun ProfileListRoutes(
     val isLoading = remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        database.fetchAuthorRoutes(
-            author = userData?.uid,
-            onResult = { routes ->
-                fetchedItems.value = routes
-                isLoading.value = false
-            },
-            onFail = {
-                isLoading.value = false
-            }
-        )
-
+        if (isNetworkAvailable(context)) {
+            database.fetchAuthorRoutes(
+                author = userData?.uid,
+                onResult = { routes ->
+                    fetchedItems.value = routes
+                    isLoading.value = false
+                },
+                onFail = {
+                    isLoading.value = false
+                }
+            )
+        } else {
+            isLoading.value = false
+            Toast.makeText(
+                context,
+                getString(context, R.string.error_fetching),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     if (isLoading.value) {

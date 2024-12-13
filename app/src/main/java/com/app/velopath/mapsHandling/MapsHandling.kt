@@ -587,31 +587,39 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            database.addNewRoute(
-                                inputText,
-                                apiHandler.overviewPolyline,
-                                apiHandler.navigationLink,
-                                apiHandler.distance,
-                                apiHandler.duration,
-                                onResult = {
-                                    Toast.makeText(
-                                        context,
-                                        getString(context, R.string.route_added),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    markers.clear()
-                                    polylines.value = null
-                                    apiHandler.clearValues()
-                                    isVisible.value = false
-                                },
-                                onFail = {
-                                    Toast.makeText(
-                                        context,
-                                        getString(context, R.string.no_service),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            )
+                            if (isNetworkAvailable(context)) {
+                                database.addNewRoute(
+                                    inputText,
+                                    apiHandler.overviewPolyline,
+                                    apiHandler.navigationLink,
+                                    apiHandler.distance,
+                                    apiHandler.duration,
+                                    onResult = {
+                                        Toast.makeText(
+                                            context,
+                                            getString(context, R.string.route_added),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        markers.clear()
+                                        polylines.value = null
+                                        apiHandler.clearValues()
+                                        isVisible.value = false
+                                    },
+                                    onFail = {
+                                        Toast.makeText(
+                                            context,
+                                            getString(context, R.string.no_service),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                )
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    getString(context, R.string.no_service),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }) {
                         Text(getString(context, R.string.add))
@@ -636,7 +644,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
         val isLoading = remember { mutableStateOf(true) }
 
         LaunchedEffect(Unit) {
-            if (isVisible.value) {
+            if (isNetworkAvailable(context)) {
                 database.fetchNearbyRoutes(
                     latLng = latLang,
                     onResult = { routes ->
@@ -647,6 +655,13 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                         isLoading.value = false
                     }
                 )
+            } else {
+                isLoading.value = false
+                Toast.makeText(
+                    context,
+                    getString(context, R.string.error_fetching),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         ModalBottomSheet(

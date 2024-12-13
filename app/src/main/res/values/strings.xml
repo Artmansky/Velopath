@@ -48,6 +48,7 @@
     <string name="logging_in">Logging You in, please wait</string>
     <string name="error">"Error: "</string>
     <string name="check_internet">Map may not load. Check Internet</string>
+    <string name="error_loading">Error loading data</string>
     <string name="location_unknown">User\'s location unknown</string>
     <string name="discover_routes">Discover nearby routes</string>
     <string name="add_more">Add markers or check connection!</string>
@@ -60,5 +61,8 @@
     <string name="route_added">Route added successfully</string>
     <string name="delete_success">Delete success</string>
     <string name="location_disabled">Location disabled</string>
+    <string name="current_add">Added now</string>
+    <string name="current_likes">Liked now</string>
+    <string name="error_fetching">Error fetching data, check connection</string>
     <string name="location_disabled_settings">Please turn your location for better app experience</string>
 </resources>

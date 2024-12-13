@@ -80,6 +80,9 @@ class FirebaseManagement(private var user: FirebaseUser?) {
             db.collection("Routes")
                 .add(newRoute)
                 .addOnSuccessListener {
+                    incrementTotalAdd()
+                    incrementCurrentAdd()
+                    incrementTotalRoutes()
                     onResult()
                 }
                 .addOnFailureListener {
@@ -91,6 +94,7 @@ class FirebaseManagement(private var user: FirebaseUser?) {
     fun deleteRoute(id: String, onResult: () -> Unit, onFail: () -> Unit) {
         db.collection("Routes").document(id).delete()
             .addOnSuccessListener {
+                decrementCurrentAdd()
                 onResult()
             }
             .addOnFailureListener {
@@ -111,9 +115,9 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                 } else {
                     for (document in documents) {
                         document.data.let { documentData ->
-                            if (abs((documentData["startLang"] as Double) - latLng.latitude) <= 0.01 && abs(
+                            if (abs((documentData["startLang"] as Double) - latLng.latitude) <= 0.03 && abs(
                                     (documentData["startLong"] as Double) - latLng.longitude
-                                ) <= 0.01
+                                ) <= 0.03
                             ) {
                                 val newItem = RouteItem(
                                     document.id,
@@ -186,6 +190,7 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                     FieldValue.arrayUnion(routeID)
                 )
                     .addOnSuccessListener {
+                        incrementTotalLiked()
                         onResult()
                     }
                     .addOnFailureListener { exception ->
@@ -195,6 +200,7 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                             )
                             documentRef.set(initialData)
                                 .addOnSuccessListener {
+                                    incrementTotalLiked()
                                     onResult()
                                 }
                                 .addOnFailureListener {
@@ -214,6 +220,7 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                 val documentRef = db.collection("Saved").document(id)
                 documentRef.update("likedRoutes", FieldValue.arrayRemove(routeID))
                     .addOnSuccessListener {
+                        decrementTotalLiked()
                         onResult()
                     }
                     .addOnFailureListener { exception ->

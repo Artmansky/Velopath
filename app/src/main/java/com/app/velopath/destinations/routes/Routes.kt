@@ -1,6 +1,7 @@
 package com.app.velopath.destinations.routes
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +15,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
+import com.app.velopath.R
 import com.app.velopath.database.FirebaseManagement
 import com.app.velopath.database.RouteItem
+import com.app.velopath.handlers.isNetworkAvailable
 import com.app.velopath.ui.TopBar
 import kotlinx.serialization.Serializable
 
@@ -55,13 +59,22 @@ fun ProfileListRoutes(
     val isLoading = remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        database.fetchLikedRoutes(
-            onResult = { routes ->
-                fetchedItems.value = routes
-                isLoading.value = false
-            },
-            onFail = {}
-        )
+        if (isNetworkAvailable(context)) {
+            database.fetchLikedRoutes(
+                onResult = { routes ->
+                    fetchedItems.value = routes
+                    isLoading.value = false
+                },
+                onFail = {}
+            )
+        } else {
+            isLoading.value = false
+            Toast.makeText(
+                context,
+                getString(context, R.string.error_fetching),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     if (isLoading.value) {
