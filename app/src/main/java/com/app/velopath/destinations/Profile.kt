@@ -212,7 +212,7 @@ fun PrintProfile(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            ProfileListRoutes(isDarkMode, userData, database, { currentAdd.value -= 1 }, context)
+            ProfileListRoutes(isDarkMode, userData, database, { currentAdd.intValue -= 1 }, context)
         }
     }
 }
