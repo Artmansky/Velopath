@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -118,6 +119,7 @@ fun MainNavigation(
     val credentialManager = CredentialManager.create(context)
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
     val gestures = rememberSaveable { mutableStateOf(false) }
+    val loginStatus = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     val mapsHandler = MapsHandling(context, database)
@@ -206,9 +208,11 @@ fun MainNavigation(
                                         getString(context, R.string.error) + e.message,
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    loginStatus.value = false
                                 }
                             }
                         },
+                        loginStatus = loginStatus,
                         darkTheme = isDarkTheme,
                         context = context
                     )
@@ -216,6 +220,7 @@ fun MainNavigation(
                 composable<Home> {
                     selectedItemIndex = 0
                     gestures.value = false
+                    loginStatus.value = false
                     PrintHome(
                         mapsHandler = mapsHandler,
                         darkMode = isDarkTheme,

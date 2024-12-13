@@ -14,9 +14,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +34,7 @@ object SignInScreen
 @Composable
 fun PrintSignInScreen(
     onSignInClick: () -> Unit,
+    loginStatus: MutableState<Boolean>,
     darkTheme: Boolean,
     context: Context
 ) {
@@ -73,34 +76,52 @@ fun PrintSignInScreen(
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            GoogleSignInButton(onSignInClick, darkTheme, context)
+            GoogleSignInButton(onSignInClick, loginStatus, darkTheme, context)
         }
     }
 }
 
 
 @Composable
-fun GoogleSignInButton(onSignInClick: () -> Unit, isDarkTheme: Boolean, context: Context) {
+fun GoogleSignInButton(
+    onSignInClick: () -> Unit,
+    loginStatus: MutableState<Boolean>,
+    isDarkTheme: Boolean,
+    context: Context
+) {
 
     val backgroundColor = if (isDarkTheme) Color.White else Color.Black
     val contentColor = if (isDarkTheme) Color.Black else Color.White
 
-    Button(
-        onClick = onSignInClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
-        shape = RoundedCornerShape(32.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = contentColor
+    if (loginStatus.value) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp),
+            color = MaterialTheme.colorScheme.primary,
+            strokeWidth = 6.dp
         )
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.google_logo_svg),
-            contentDescription = "Google Logo",
-            modifier = Modifier.padding(end = 8.dp)
-        )
-        Text(text = getString(context, R.string.sign_google), modifier = Modifier.padding(6.dp))
+    } else {
+        Button(
+            onClick = {
+                loginStatus.value = true
+                onSignInClick()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
+            shape = RoundedCornerShape(32.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = backgroundColor,
+                contentColor = contentColor
+            ),
+            enabled = !loginStatus.value
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.google_logo_svg),
+                contentDescription = "Google Logo",
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(text = getString(context, R.string.sign_google), modifier = Modifier.padding(6.dp))
+        }
     }
 }
