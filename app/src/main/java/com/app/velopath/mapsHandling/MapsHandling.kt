@@ -580,7 +580,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                         Text(getString(context, R.string.cancel))
                     }
                     TextButton(onClick = {
-                        if (inputText.isEmpty() || inputText.length < 4) {
+                        if (inputText.length < 4) {
                             Toast.makeText(
                                 context,
                                 getString(context, R.string.too_short),
