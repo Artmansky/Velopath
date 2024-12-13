@@ -88,9 +88,11 @@ fun ProfileListRoutes(
         }
     } else {
         AnimatedExpandableList(
-            false,
+            true,
             fetchedItems.value,
-            database::addLiked,
+            {},
+            database::deleteRoute,
+            database::removeLiked,
             isDarkMode,
             context
         )

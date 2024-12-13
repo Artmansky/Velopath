@@ -212,7 +212,7 @@ fun PrintProfile(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            ProfileListRoutes(isDarkMode, userData, database, context)
+            ProfileListRoutes(isDarkMode, userData, database, { currentAdd.value -= 1 }, context)
         }
     }
 }
@@ -222,6 +222,7 @@ fun ProfileListRoutes(
     isDarkMode: Boolean,
     userData: FirebaseUser?,
     database: FirebaseManagement,
+    onProfileDelete: () -> Unit,
     context: Context
 ) {
     val fetchedItems = remember { mutableStateOf<List<RouteItem>>(emptyList()) }
@@ -259,6 +260,14 @@ fun ProfileListRoutes(
             CircularProgressIndicator()
         }
     } else {
-        AnimatedExpandableList(true, fetchedItems.value, database::deleteRoute, isDarkMode, context)
+        AnimatedExpandableList(
+            true,
+            fetchedItems.value,
+            onProfileDelete,
+            database::deleteRoute,
+            database::removeLiked,
+            isDarkMode,
+            context
+        )
     }
 }
