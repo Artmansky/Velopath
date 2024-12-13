@@ -50,7 +50,7 @@
     <string name="check_internet">Map may not load. Check Internet</string>
     <string name="location_unknown">User\'s location unknown</string>
     <string name="discover_routes">Discover nearby routes</string>
-    <string name="add_more">Add more markers to the map!</string>
+    <string name="add_more">Add markers or check connection!</string>
     <string name="add_route">Add route</string>
     <string name="no_service">Service not available</string>
     <string name="no_markers">No markers are placed</string>

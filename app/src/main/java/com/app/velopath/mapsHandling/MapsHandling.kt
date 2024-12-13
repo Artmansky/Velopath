@@ -450,7 +450,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     ) {
                         Button(
                             onClick = {
-                                if (markers.count() > 1) {
+                                if (markers.count() > 1 && polylines.value != null) {
                                     isAddDialogVisible.value = true
                                 } else {
                                     Toast.makeText(
@@ -599,6 +599,10 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                                         getString(context, R.string.route_added),
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    markers.clear()
+                                    polylines.value = null
+                                    apiHandler.clearValues()
+                                    isVisible.value = false
                                 },
                                 onFail = {
                                     Toast.makeText(
@@ -608,10 +612,6 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                                     ).show()
                                 }
                             )
-                            markers.clear()
-                            polylines.value = null
-                            apiHandler.clearValues()
-                            isVisible.value = false
                         }
                     }) {
                         Text(getString(context, R.string.add))
