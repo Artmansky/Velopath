@@ -35,7 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import com.app.velopath.R
 import com.app.velopath.database.RouteItem
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.PolyUtil
+import com.google.maps.android.compose.CameraPositionState
 
 
 @Composable
@@ -44,6 +48,8 @@ fun DirectionsList(
     controlsVisible: MutableState<Boolean>,
     showMarkers: MutableList<LatLng>,
     showPolylines: MutableState<List<LatLng>?>,
+    navigationLink: MutableState<String>,
+    cameraPosition: CameraPositionState,
     context: Context
 ) {
     if (itemsDisplay.isEmpty()) {
@@ -70,11 +76,12 @@ fun DirectionsList(
             itemsIndexed(itemsDisplay, key = { index, _ -> index }) { _, item ->
                 DirectionItem(
                     context = context,
-                    isAuthor = false,
                     controlsVisible = controlsVisible,
                     item = item,
                     showMarkers = showMarkers,
-                    showPolylines = showPolylines
+                    showPolylines = showPolylines,
+                    navigationLink = navigationLink,
+                    cameraPosition = cameraPosition
                 )
             }
         }
@@ -85,10 +92,11 @@ fun DirectionsList(
 @Composable
 fun DirectionItem(
     context: Context,
-    isAuthor: Boolean,
     controlsVisible: MutableState<Boolean>,
     showMarkers: MutableList<LatLng>,
     showPolylines: MutableState<List<LatLng>?>,
+    navigationLink: MutableState<String>,
+    cameraPosition: CameraPositionState,
     item: RouteItem
 ) {
     Surface(
@@ -110,16 +118,14 @@ fun DirectionItem(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
-                if (!isAuthor) {
-                    Icon(
-                        imageVector = Icons.Outlined.Star,
-                        contentDescription = "Like Status",
-                        modifier = Modifier
-                            .clickable {
-                                //Zaimplementowac Clicka do bazy
-                            }
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Outlined.Star,
+                    contentDescription = "Like Status",
+                    modifier = Modifier
+                        .clickable {
+                            //Zaimplementowac Clicka do bazy
+                        }
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
@@ -149,7 +155,20 @@ fun DirectionItem(
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
                         showMarkers.clear()
-                        showPolylines.value = null
+                        showPolylines.value = PolyUtil.decode(item.overviewPolyline)
+                        showMarkers.add(LatLng(item.startLang, item.startLong))
+                        showMarkers.add(LatLng(item.endLang, item.endLong))
+                        navigationLink.value = item.navigationLink
+                        cameraPosition.move(
+                            CameraUpdateFactory.newCameraPosition(
+                                CameraPosition(
+                                    LatLng(
+                                        item.startLang,
+                                        item.startLong
+                                    ), 12.5f, 0f, 0f
+                                )
+                            )
+                        )
                         controlsVisible.value = true
                     }
                     ) {

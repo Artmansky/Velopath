@@ -2,6 +2,8 @@ package com.app.velopath.mapsHandling
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -105,6 +107,7 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
         val showMarkers = remember { mutableStateListOf<LatLng>() }
         val polylines = remember { mutableStateOf<List<LatLng>?>(null) }
         val showPolylines = remember { mutableStateOf<List<LatLng>?>(null) }
+        val navigationLink = remember { mutableStateOf("") }
 
         val userLocation = remember {
             if (hasPermission.value) getCurrentLocation(
@@ -263,7 +266,9 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                                     isExtraButtonsVisible,
                                     showMarkers,
                                     showPolylines,
-                                    LatLng(pair.first, pair.second),
+                                    navigationLink,
+                                    cameraPositionState,
+                                    LatLng(pair.first, pair.second)
                                 )
                             } else {
                                 Toast.makeText(
@@ -407,8 +412,11 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     ) {
                         FloatingActionButton(
                             onClick = {
-
-
+                                val mapIntent = Intent(
+                                    Intent.ACTION_VIEW, Uri.parse(navigationLink.value)
+                                )
+                                mapIntent.setPackage("com.google.android.apps.maps")
+                                context.startActivity(mapIntent)
                             }
                         ) {
                             Text(text = getString(context, R.string.ride))
@@ -620,6 +628,8 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
         controlsVisible: MutableState<Boolean>,
         showMarkers: MutableList<LatLng>,
         showPolylines: MutableState<List<LatLng>?>,
+        navigationLink: MutableState<String>,
+        cameraPosition: CameraPositionState,
         latLang: LatLng
     ) {
         val fetchedItems = remember { mutableStateOf<List<RouteItem>>(emptyList()) }
@@ -657,6 +667,8 @@ class MapsHandling(private val context: Context, private val database: FirebaseM
                     controlsVisible,
                     showMarkers,
                     showPolylines,
+                    navigationLink,
+                    cameraPosition,
                     context
                 )
             }
