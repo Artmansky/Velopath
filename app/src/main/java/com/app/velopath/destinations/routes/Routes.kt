@@ -74,6 +74,12 @@ fun ProfileListRoutes(
             CircularProgressIndicator()
         }
     } else {
-        AnimatedExpandableList(false, fetchedItems.value, database::addLiked, isDarkMode, context)
+        AnimatedExpandableList(
+            false,
+            fetchedItems.value,
+            database::addLiked,
+            isDarkMode,
+            context
+        )
     }
 }

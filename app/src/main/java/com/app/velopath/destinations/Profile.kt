@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,6 +37,7 @@ import coil3.compose.AsyncImage
 import com.app.velopath.R
 import com.app.velopath.database.FirebaseManagement
 import com.app.velopath.database.RouteItem
+import com.app.velopath.database.Stats
 import com.app.velopath.destinations.routes.AnimatedExpandableList
 import com.app.velopath.ui.TopBar
 import com.google.firebase.auth.FirebaseUser
@@ -54,6 +56,24 @@ fun PrintProfile(
     isDarkMode: Boolean,
     context: Context
 ) {
+    val isLoading = remember { mutableStateOf(false) }
+    val userStats = remember { mutableStateOf(Stats()) }
+    val currentAdd = remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        database.fetchUserStats(
+            author = userData?.uid,
+            onResult = { stats ->
+                userStats.value = stats
+                currentAdd.intValue = userStats.value.currentAdd
+                isLoading.value = false
+            },
+            onFail = {
+                isLoading.value = false
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopBar(
@@ -123,14 +143,20 @@ fun PrintProfile(
                                 getString(context, R.string.total_added),
                                 style = MaterialTheme.typography.bodyMedium
                             )
-                            Text("Value 1", style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                userStats.value.totalAdd.toString(),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 getString(context, R.string.total_liked),
                                 style = MaterialTheme.typography.bodyMedium
                             )
-                            Text("Value 2", style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                currentAdd.intValue.toString(),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -143,14 +169,20 @@ fun PrintProfile(
                                 getString(context, R.string.total_likes),
                                 style = MaterialTheme.typography.bodyMedium
                             )
-                            Text("Value 3", style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                userStats.value.totalLiked.toString(),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 getString(context, R.string.total_routes),
                                 style = MaterialTheme.typography.bodyMedium
                             )
-                            Text("Value 4", style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                userStats.value.totalRoutes.toString(),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                     }
                 }

@@ -14,3 +14,10 @@ data class RouteItem(
     val overviewPolyline: String,
     val isExpanded: Boolean = false
 )
+
+data class Stats(
+    val totalAdd: Int = 0,
+    val currentAdd: Int = 0,
+    val totalLiked: Int = 0,
+    val totalRoutes: Int = 0
+)

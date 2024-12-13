@@ -25,6 +25,7 @@ class FirebaseManagement(private var user: FirebaseUser?) {
 
     fun updateCurrentUser(newUser: FirebaseUser?) {
         user = newUser
+        addNewUserDocumentIfNotExists()
     }
 
     fun addFeedbackMessage(
@@ -249,6 +250,32 @@ class FirebaseManagement(private var user: FirebaseUser?) {
         }
     }
 
+    fun fetchUserStats(
+        author: String?,
+        onResult: (Stats) -> Unit,
+        onFail: () -> Unit
+    ) {
+        if (author != null) {
+            db.collection("stats").document(author).get()
+                .addOnSuccessListener { document ->
+                    document.data.let { documentData ->
+                        if (documentData != null) {
+                            val newItem = Stats(
+                                (documentData["totalAdd"] as Long).toInt(),
+                                (documentData["currentAdd"] as Long).toInt(),
+                                (documentData["totalLiked"] as Long).toInt(),
+                                (documentData["totalRoutes"] as Long).toInt()
+                            )
+                            onResult(newItem)
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    onFail()
+                }
+        }
+    }
+
     private fun fetchRouteDetails(
         likedRoutes: List<String>,
         onResult: (List<RouteItem>) -> Unit
@@ -288,6 +315,62 @@ class FirebaseManagement(private var user: FirebaseUser?) {
                         onResult(routeItems)
                     }
                 }
+        }
+    }
+
+    private fun addNewUserDocumentIfNotExists() {
+        user?.uid.let { id ->
+            if (id != null) {
+                db.collection("stats").document(id).get()
+                    .addOnSuccessListener { document ->
+                        if (!document.exists()) {
+                            val userData = mapOf(
+                                "totalAdd" to 0,
+                                "currentAdd" to 0,
+                                "totalLiked" to 0,
+                                "totalRoutes" to 0
+                            )
+
+                            db.collection("stats").document(id).set(userData)
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun incrementTotalAdd() {
+        user?.uid?.let { id ->
+            db.collection("stats").document(id).update("totalAdd", FieldValue.increment(1))
+        }
+    }
+
+    private fun incrementCurrentAdd() {
+        user?.uid?.let { id ->
+            db.collection("stats").document(id).update("currentAdd", FieldValue.increment(1))
+        }
+    }
+
+    private fun decrementCurrentAdd() {
+        user?.uid?.let { id ->
+            db.collection("stats").document(id).update("currentAdd", FieldValue.increment(-1))
+        }
+    }
+
+    private fun incrementTotalLiked() {
+        user?.uid?.let { id ->
+            db.collection("stats").document(id).update("totalLiked", FieldValue.increment(1))
+        }
+    }
+
+    private fun decrementTotalLiked() {
+        user?.uid?.let { id ->
+            db.collection("stats").document(id).update("totalLiked", FieldValue.increment(-1))
+        }
+    }
+
+    private fun incrementTotalRoutes() {
+        user?.uid?.let { id ->
+            db.collection("stats").document(id).update("totalRoutes", FieldValue.increment(1))
         }
     }
 }

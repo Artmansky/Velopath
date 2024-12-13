@@ -154,6 +154,7 @@ fun ExpandedItem(
                             .padding(start = 8.dp)
                             .clickable {
                                 addLikedFunction(item.id, {}, {})
+                                onDelete()
                             }
                     )
                 }
