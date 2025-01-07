@@ -225,6 +225,7 @@ fun ExpandedItem(
                             .fillMaxWidth()
                             .height(200.dp),
                         uiSettings = MapUiSettings(
+                            mapToolbarEnabled = false,
                             zoomControlsEnabled = false,
                             compassEnabled = false,
                             myLocationButtonEnabled = false,
